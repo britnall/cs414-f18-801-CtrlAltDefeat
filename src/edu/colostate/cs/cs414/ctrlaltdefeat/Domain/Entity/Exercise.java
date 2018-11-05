@@ -9,7 +9,7 @@ public class Exercise {
 
    public Exercise(String name, Integer numOfReps, Integer numOfSets, Equipment equipment) {
       this.name = name;
-      this.setNumOfReps(numOfReps);
+      this.numOfReps = numOfReps;
       this.numOfSets = numOfSets;
       this.equipment = equipment;
    }
@@ -17,10 +17,6 @@ public class Exercise {
    public String getName() {
       return name;
    }
-   public void setName(String name) {
-      this.name = name;
-   }
-
    public Integer getNumOfSets() {
       return numOfSets;
    }

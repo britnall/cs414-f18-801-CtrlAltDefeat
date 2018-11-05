@@ -22,8 +22,11 @@ public class Customer {
    public PersonalInformation getPersonalInfo() {
       return personalInfo;
    }
-   public void setPersonalInfo(PersonalInformation personalInfo) {
-      this.personalInfo = personalInfo;
+   public void updatePersonalInfo(PersonalInformation personalInfo) {
+      this.personalInfo.setAddress(personalInfo.getAddress());
+      this.personalInfo.setEmail(personalInfo.getEmail());
+      this.personalInfo.setHealthInsuranceProvider(personalInfo.getHealthInsuranceProvider());
+      this.personalInfo.setPhone(personalInfo.getPhone());
    }
    public MembershipStatus getStatus() {
       return status;
@@ -31,21 +34,22 @@ public class Customer {
    public void setStatus(MembershipStatus status) {
       this.status = status;
    }
+  
    public void addRoutine(WorkoutRoutine r) {
-	   routines.add(r);
+	   this.routines.add(r);
    }
    public void removeRoutine(WorkoutRoutine r) {
-	   routines.remove(r);
+	   this.routines.remove(r);
    }
-
-   public void setWorkoutRoutines(Set<WorkoutRoutine> workoutRoutines) {
-      routines = workoutRoutines;   
+   
+   public void setWorkoutRoutines(Set<WorkoutRoutine> wr) {
+      this.routines = wr;
    }
-
+   
    public Set<WorkoutRoutine> getWorkoutRoutines() {
-      return routines;
+      return this.routines;
    }
-
+   
    @Override
    public int hashCode() {
       final int prime = 31;

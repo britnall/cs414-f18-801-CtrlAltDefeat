@@ -18,21 +18,23 @@ public class Equipment {
    public String getName() {
       return name;
    }
-   public void setName(String name) {
-      this.name = name;
-   }
+   
    public File getPicture() {
       return picture;
    }
+   
    public void setPicture(File picture) {
       this.picture = picture;
    }
+   
    public Integer getQuantity() {
       return quantity;
    }
+   
    public void setQuantity(Integer quantity) {
       this.quantity = quantity;
    }
+   
 	@Override
 	public int hashCode() {
 		final int prime = 31;

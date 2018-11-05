@@ -7,7 +7,8 @@ public class Schedule {
    
    private Set<WorkTime> workSchedule;
 	
-	public Schedule() {
+	public Schedule() 
+	{
 	   workSchedule = new HashSet<WorkTime>();
 	}
 	
@@ -21,17 +22,9 @@ public class Schedule {
 	   return workSchedule.remove(w);
 	}
 	
-	public WorkTime getWorkTime(Weekday w) 
+	public Set<WorkTime> getWorkTime()
 	{
-	   for(WorkTime wk: workSchedule)
-	   {
-	      if(wk.getDayOfWeek().equals(w))
-	      {
-	         return wk;
-	      }
-	   }
-	   
-	   return null;
+	   return this.workSchedule;
 	}
 
    @Override
@@ -68,7 +61,5 @@ public class Schedule {
          return false;
       return true;
    }
-	
-	
 	
 }

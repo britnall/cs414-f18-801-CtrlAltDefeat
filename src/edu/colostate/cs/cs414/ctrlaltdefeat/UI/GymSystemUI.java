@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import edu.colostate.cs.cs414.ctrlaltdefeat.Controllers.GymSystemController;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Controllers.GymSystemCreator;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Controllers.Response;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Equipment;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Exercise;
@@ -35,7 +36,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
@@ -340,58 +340,72 @@ public class GymSystemUI {
       JButton btnSave_2 = new JButton("Save");
       btnSave_2.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
-            Address address = new Address(street.getText(), state.getText(), city.getText(), zipcode.getText());
-            PersonalInformation pi = new PersonalInformation(firstName.getText(), lastName.getText(), email.getText(),
-                  phone.getText(), "0", insurance.getText(), address);
-
-            if (address.isValid() && pi.isValid()) {
+            Address address = GymSystemCreator.getInstance().createAddress(street.getText(), state.getText(), city.getText(), zipcode.getText());
+            PersonalInformation pi = GymSystemCreator.getInstance().createPI(firstName.getText(), lastName.getText(), email.getText(),
+                  phone.getText(), insurance.getText(), address);
+            if(pi != null)
+            {
                Response success = new Response();
-               User u = new User(userName.getText(), password02.getText());
+               User u = GymSystemCreator.getInstance().createUser(userName.getText(), password02.getText());
+              
                if (action.equals("Add") && newEmployeeType == UserType.MANAGER) {
-                  if (!userName.getText().equals("") && !password02.getText().equals("")) {
-                     Manager m = new Manager(u, pi);
-                     success = GymSystemController.getInstance().addManager(m);
-
-                  } else {
-                     success.info = "Failed to provide user login information";
+                  Manager m = GymSystemCreator.getInstance().createManager(u, pi);
+                  if(m != null)
+                  {
+                     success = GymSystemController.getInstance().addManager(m); 
                   }
-               } else if (action.equals("Update") && employeeSearched != null
-                     && employeeSearched.getUserType() == UserType.MANAGER) {
-                  if (!userName.getText().equals("") && !password02.getText().equals("")) {
-                     Manager m = new Manager(u, pi);
-                     success = GymSystemController.getInstance().updateManager((Manager) employeeSearched, m);
-
-                  } else {
-                     success.info = "Failed to provide user login information";
+                  else
+                  {
+                     success.info = "Failed to create manager.";
                   }
-               } else if (action.equals("Add") && newEmployeeType == UserType.TRAINER) {
-                  if (!userName.getText().equals("") && !password02.getText().equals("") && createdSchedule != null) {
-                     Trainer t = new Trainer(u, pi);
+                  
+               } 
+               else if (action.equals("Update") && employeeSearched != null
+                     && employeeSearched.getUserType() == UserType.MANAGER) 
+               {
+                  Manager m = GymSystemCreator.getInstance().createManager(u, pi);
+                  success = GymSystemController.getInstance().updateManager((Manager) employeeSearched, m); 
+               } 
+               else if (action.equals("Add") && newEmployeeType == UserType.TRAINER) 
+               {
+                  Trainer t = GymSystemCreator.getInstance().createTrainer(u, pi);
+                  if(t != null)
+                  {
                      t.setSchedule(createdSchedule);
                      success = GymSystemController.getInstance().addTrainer(t);
-                  } else {
-                     success.info = "Failed to provide user login information";
                   }
-               } else if (action.equals("Update") && employeeSearched != null
-                     && employeeSearched.getUserType() == UserType.TRAINER) {
-                  if (!userName.getText().equals("") && !password02.getText().equals("")) {
-                     Trainer t = new Trainer(u, pi);
-                     t.setSchedule(createdSchedule);
-                     success = GymSystemController.getInstance().updateTrainer((Trainer) employeeSearched, t);
-
-                  } else {
-                     success.info = "Failed to provide user login information";
+                  else
+                  {
+                     success.info = "Failed to create trainer.";
                   }
-               } else if (action.equals("Add") && customerSearched == null) {
-                  Customer c = new Customer(pi);
-                  c.setStatus((MembershipStatus) mstatus.getSelectedItem());
-                  success = GymSystemController.getInstance().addCustomer(c);
-               } else if (action.equals("Update") && customerSearched != null) {
-                  Customer c = new Customer(pi);
-                  c.setStatus((MembershipStatus) mstatus.getSelectedItem());
-                  success = GymSystemController.getInstance().updateCustomer(customerSearched, c);
                }
-
+               else if (action.equals("Update") && employeeSearched != null
+                     && employeeSearched.getUserType() == UserType.TRAINER) {
+                   Trainer t = GymSystemCreator.getInstance().createTrainer(u, pi);
+                   t.setSchedule(createdSchedule);
+                   success = GymSystemController.getInstance().updateTrainer((Trainer) employeeSearched, t);                   
+               } 
+               else if (action.equals("Add") && customerSearched == null) 
+               {
+                  Customer c = GymSystemCreator.getInstance().createCustomer(pi);
+                  if(c != null)
+                  {
+                     c.setStatus((MembershipStatus) mstatus.getSelectedItem());
+                     success = GymSystemController.getInstance().addCustomer(c);
+                  }
+                  else
+                  {
+                     success.info = "Failed to create customer.";
+                  }
+                  
+               } 
+               else if (action.equals("Update") && customerSearched != null) 
+               {
+                  Customer c = GymSystemCreator.getInstance().createCustomer(pi);
+                  c.setStatus((MembershipStatus) mstatus.getSelectedItem());
+                  success = GymSystemController.getInstance().updateCustomer(customerSearched, c);               
+               }
+               
                if (!success.successful) {
                   JOptionPane.showMessageDialog(mainMenuPanel, success.info);
                } else {
@@ -413,10 +427,12 @@ public class GymSystemUI {
                      TrainerMenu.setVisible(true);
                   }
                }
-            } else {
+               
+            }
+            else
+            {
                JOptionPane.showMessageDialog(mainMenuPanel, "User Information is not valid");
             }
-
          }
       });
       btnSave_2.setBounds(260, 335, 117, 29);
@@ -428,13 +444,13 @@ public class GymSystemUI {
       searchPanel.add(lblSearchForUser);
 
       uSearchFirstName = new JTextField();
-      uSearchFirstName.setBounds(195, 53, 130, 26);
+      uSearchFirstName.setBounds(195, 25, 130, 26);      
       searchPanel.add(uSearchFirstName);
       uSearchFirstName.setColumns(10);
       allTextFields.add(uSearchFirstName);
 
       uSearchLastName = new JTextField();
-      uSearchLastName.setBounds(195, 25, 130, 26);
+      uSearchLastName.setBounds(195, 53, 130, 26);
       searchPanel.add(uSearchLastName);
       uSearchLastName.setColumns(10);
       allTextFields.add(uSearchLastName);
@@ -512,6 +528,9 @@ public class GymSystemUI {
                   insurance.setText(employeeSearched.getPersonalInfo().getHealthInsuranceProvider());
                   userName.setText(employeeSearched.getUserInfo().getUserName());
                   password02.setText(employeeSearched.getUserInfo().getPassword());
+                  lblMembership.setVisible(false);
+                  mstatus.setVisible(false);
+                  loginInfoPanel.setVisible(true);
                   if (employeeSearched.getUserType() == UserType.TRAINER) {
                      btnAddWorkSchedule.setVisible(true);
                   }
@@ -617,14 +636,16 @@ public class GymSystemUI {
       JButton btnAdd_1 = new JButton("Add");
       btnAdd_1.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
-            if (!startTime.getText().equals("") && !endTime.getText().equals("")) {
-               WorkTime w = new WorkTime(startTime.getText(), endTime.getText(), (Weekday) weekday.getSelectedItem());
+            WorkTime w =  GymSystemCreator.getInstance().createWorkTime(startTime.getText(), endTime.getText(), (Weekday) weekday.getSelectedItem());
+            
+            if(w != null)
+            {
                createdSchedule.addWorkTime(w);
-
                txtDisplayScheduleHere.setText(createdSchedule.toString());
             } else {
                JOptionPane.showMessageDialog(mainMenuPanel, "Work Time not valid.");
             }
+
          }
       });
       btnAdd_1.setBounds(96, 148, 117, 29);
@@ -700,11 +721,9 @@ public class GymSystemUI {
       JButton btnAdd = new JButton("Save");
       btnAdd.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
-            if (!equipmentName.getText().equals("") && !eqPicturePath.getText().equals("")
-                  && !equipmentQuantity.getText().equals("")) {
-               File pic = new File(eqPicturePath.getText());
-               int quantity = Integer.parseInt(equipmentQuantity.getText());
-               Equipment equipment = new Equipment(equipmentName.getText(), pic, quantity);
+            Equipment equipment = GymSystemCreator.getInstance().createEquipment(equipmentName.getText(), eqPicturePath.getText(), equipmentQuantity.getText());
+            if(equipment != null)
+            {
                Response success = new Response();
                if (action.equals("Add")) {
                   success = GymSystemController.getInstance().addEquipment(equipment);
@@ -732,7 +751,6 @@ public class GymSystemUI {
             } else {
                JOptionPane.showMessageDialog(mainMenuPanel, "Equipment Information is not valid");
             }
-
          }
       });
       btnAdd.setBounds(196, 288, 117, 29);
@@ -843,11 +861,12 @@ public class GymSystemUI {
       btnSaveWorkout.setBounds(353, 133, 210, 29);
       btnSaveWorkout.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
-            if (!workoutName.getText().equals("")) {
-               if (customerSearched == null) {
-                  JOptionPane.showMessageDialog(mainMenuPanel, "Search Customer to Assign Workout To.");
-               } else {
-                  WorkoutRoutine wr = new WorkoutRoutine(workoutName.getText(), newExercises);
+            if (customerSearched == null) {
+               JOptionPane.showMessageDialog(mainMenuPanel, "Search Customer to Assign Workout To.");
+            } else {
+               WorkoutRoutine wr = GymSystemCreator.getInstance().createWorkoutRoutine(workoutName.getText(), newExercises);
+               if(wr != null)
+               {
                   Response success = GymSystemController.getInstance().assignWorkoutRoutine(customerSearched, wr);
                   
                   if(success.successful) {
@@ -866,11 +885,11 @@ public class GymSystemUI {
                      JOptionPane.showMessageDialog(mainMenuPanel, success.info);
                   }
                }
-
-            } else {
-               JOptionPane.showMessageDialog(mainMenuPanel, "Workout Routine needs a name.");
+               else
+               {
+                  JOptionPane.showMessageDialog(mainMenuPanel, "Workout Routine needs a name.");
+               }
             }
-
          }
       });
       createWorkoutPanel.add(btnSaveWorkout);
@@ -886,28 +905,20 @@ public class GymSystemUI {
       btnAddToWorkout.setBounds(58, 307, 195, 29);
       btnAddToWorkout.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
-            if (!exerciseName.getText().equals("") && !numReps.getText().equals("") && !numSets.getText().equals("")
-                  && !equipment.getText().equals("")) {
-               Equipment eq = GymSystemController.getInstance().searchEquipment(equipment.getText());
-               if (eq != null) {
-                  Exercise ex = new Exercise(exerciseName.getText(), Integer.parseInt(numReps.getText()),
-                        Integer.parseInt(numSets.getText()), eq);
-                  newExercises.add(ex);
-               } else {
-                  JOptionPane.showMessageDialog(mainMenuPanel, "Equipment not in inventory.");
-               }
-
+            Exercise ex = GymSystemCreator.getInstance().createExercise(exerciseName.getText(), numReps.getText(), numSets.getText(), equipment.getText());
+            if(ex != null)
+            {
+               newExercises.add(ex);
             } else {
-               JOptionPane.showMessageDialog(mainMenuPanel, "Exercise information is not valid");
+               JOptionPane.showMessageDialog(mainMenuPanel, "Exercise information is not valid.");
             }
-
+            
             String s = "[" + workoutName.getText() + "]\n";
             for (Exercise exer : newExercises) {
                s += exer.toString() + "\n";
             }
 
             txtListExercisesHere.setText(s);
-
          }
       });
       createWorkoutPanel.add(btnAddToWorkout);

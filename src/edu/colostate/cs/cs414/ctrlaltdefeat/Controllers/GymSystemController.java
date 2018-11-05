@@ -196,7 +196,8 @@ public class GymSystemController {
       Response response = new Response();
       response.info = "Failed to update manager.";
       
-      if(dao.deleteManager(old) && dao.addManager(update)){
+      if(update != null && dao.updateManager(old, update.getPersonalInfo(), update.getUserInfo()))
+      {
          response.successful = true;
          response.info = "Manager information updated successfully!";
          storeData();
@@ -210,7 +211,8 @@ public class GymSystemController {
       Response response = new Response();
       response.info = "Failed to update trainer.";
       
-      if(dao.deleteTrainer(old) && dao.addTrainer(update)){
+      if(update != null && dao.updateTrainer(old, update.getPersonalInfo(), update.getUserInfo()))
+      {
          response.successful = true;
          response.info = "Trainer information updated successfully!";
          storeData();
@@ -224,7 +226,9 @@ public class GymSystemController {
       Response response = new Response();
       response.info = "Failed to update customer.";
       
-      if(dao.deleteCustomer(old) && dao.addCustomer(update)){
+      if(update != null && dao.updateCustomer(old, update.getPersonalInfo(), update.getStatus(), 
+            update.getWorkoutRoutines()))
+      {
          response.successful = true;
          response.info = "Customer information updated successfully!";
          storeData();
@@ -238,7 +242,8 @@ public class GymSystemController {
       Response response = new Response();
       response.info = "Failed to update equipment.";
       
-      if(dao.deleteEquipment(old) && dao.addEquipment(update)){
+      
+      if(update != null && dao.updateEquipment(old, update.getPicture(), update.getQuantity())){
          response.successful = true;
          response.info = "Equipment information updated successfully!";
          storeData();
@@ -283,51 +288,17 @@ public class GymSystemController {
    
    public Employee searchUser(String firstName, String lastName)
    {
-      for(Manager m: getManagers())
-      {
-         if(!m.getUserInfo().getUserName().equals("user") && 
-               m.getPersonalInfo().getFirstName().toLowerCase().equals(firstName.toLowerCase()) && 
-               m.getPersonalInfo().getLastName().toLowerCase().equals(lastName.toLowerCase()))
-         {
-            return m;
-         }
-      }
-      
-      for(Trainer t: getTrainers())
-      {
-         if(t.getPersonalInfo().getFirstName().toLowerCase().equals(firstName.toLowerCase()) && 
-               t.getPersonalInfo().getLastName().toLowerCase().equals(lastName.toLowerCase()))
-         {
-            return t;
-         }
-      }
-      
-      return null;
+      return dao.searchUser(firstName, lastName);
    }
    
    public Customer searchCustomer(String firstName, String lastName)
    {
-      for(Customer c: getCustomers())
-      {
-         if(c.getPersonalInfo().getFirstName().toLowerCase().equals(firstName.toLowerCase()) && 
-               c.getPersonalInfo().getLastName().toLowerCase().equals(lastName.toLowerCase()))
-         {
-            return c;
-         }
-      }
-      
-      return null;
+      return dao.searchCustomer(firstName, lastName);
    }
    
    public Equipment searchEquipment(String name)
    {
-      for(Equipment e: getEquipment())
-      {
-         if(e.getName().toLowerCase().equals(name.toLowerCase())) {
-            return e;
-         }
-      }
-      return null;
+      return dao.searchEquipment(name);
    }
 
    public Set<Manager> getManagers(){ 

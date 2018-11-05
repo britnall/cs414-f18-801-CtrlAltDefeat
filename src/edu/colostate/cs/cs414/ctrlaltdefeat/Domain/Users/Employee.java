@@ -10,28 +10,26 @@ public class Employee {
    public Employee(User userInfo, PersonalInformation personalInfo, UserType userType) {
       this.userInfo = userInfo;
       this.personalInfo = personalInfo;
-      this.setUserType(userType);
+      this.userType = userType;
    }
    
    public User getUserInfo() {
       return userInfo;
    }
-   public void setUserInfo(User userInfo) {
-      this.userInfo = userInfo;
+   public void updatePassword(User userInfo) {
+      this.userInfo.setPassword(userInfo.getPassword());
    }
    public PersonalInformation getPersonalInfo() {
       return personalInfo;
    }
-   public void setPersonalInfo(PersonalInformation personalInfo) {
-      this.personalInfo = personalInfo;
-   }
-
+   public void updatePersonalInfo(PersonalInformation personalInfo) {
+      this.personalInfo.setAddress(personalInfo.getAddress());
+      this.personalInfo.setEmail(personalInfo.getEmail());
+      this.personalInfo.setHealthInsuranceProvider(personalInfo.getHealthInsuranceProvider());
+      this.personalInfo.setPhone(personalInfo.getPhone());
+   }  
    public UserType getUserType() {
       return userType;
-   }
-
-   public void setUserType(UserType userType) {
-      this.userType = userType;
    }
 
 	@Override

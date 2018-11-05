@@ -9,7 +9,7 @@ public class PersonalInformation {
    private String healthInsuranceProvider;
    private Address address;
    
-   public PersonalInformation(String firstName, String lastName, String email, String phone, String ID,
+   public PersonalInformation(String firstName, String lastName, String email, String phone,
          String healthInsuranceProvider, Address address) {
       this.firstName = firstName;
       this.lastName = lastName;
@@ -22,14 +22,8 @@ public class PersonalInformation {
    public String getFirstName() {
       return firstName;
    }
-   public void setFirstName(String firstName) {
-      this.firstName = firstName;
-   }
    public String getLastName() {
       return lastName;
-   }
-   public void setLastName(String lastName) {
-      this.lastName = lastName;
    }
    public String getEmail() {
       return email;

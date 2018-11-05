@@ -1,16 +1,18 @@
 package edu.colostate.cs.cs414.ctrlaltdefeat.Controllers;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Equipment;
-import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Exercise;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.WorkoutRoutine;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Customer;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Employee;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Manager;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Trainer;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.User;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.MembershipStatus;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.PersonalInformation;
 
 public class SystemDao {
    
@@ -43,6 +45,27 @@ public class SystemDao {
       return true;
    }
    
+   public boolean updateManager(Manager manager, PersonalInformation pi, User password)
+   {
+      try {
+         Manager update = this.getManager(manager);
+         if(update != null)
+         {
+            update.updatePersonalInfo(pi);
+            update.updatePassword(password);
+            return true;
+         }
+         else
+         {
+            return false;
+         }
+         
+      }
+      catch(Exception e) {
+         return false;
+      }  
+   }
+   
    public boolean deleteManager(Manager manager){
       try {
          this.managers.remove(manager);     
@@ -61,6 +84,27 @@ public class SystemDao {
          return false;
       }
       return true;
+   }
+   
+   public boolean updateTrainer(Trainer trainer, PersonalInformation pi, User password)
+   {
+      try {
+         Trainer update = this.getTrainer(trainer);
+         if(update != null)
+         {
+            update.updatePersonalInfo(pi);
+            update.updatePassword(password);
+            return true;
+         }
+         else
+         {
+            return false;
+         }
+         
+      }
+      catch(Exception e) {
+         return false;
+      }  
    }
    
    public boolean deleteTrainer(Trainer trainer){
@@ -83,6 +127,29 @@ public class SystemDao {
       return true;
    }
    
+   public boolean updateCustomer(Customer customer, PersonalInformation pi, 
+         MembershipStatus status, Set<WorkoutRoutine> routines)
+   {
+      try {
+         Customer update = this.getCustomer(customer);
+         if(update != null)
+         {
+            update.updatePersonalInfo(pi);
+            update.setStatus(status);
+            update.setWorkoutRoutines(routines);
+            return true;
+         }
+         else
+         {
+            return false;
+         }
+         
+      }
+      catch(Exception e) {
+         return false;
+      }     
+   }
+   
    public boolean deleteCustomer(Customer customer){
       try {
          this.customers.remove(customer);     
@@ -102,6 +169,25 @@ public class SystemDao {
       }
       return true;
       
+   }
+   
+   public boolean updateEquipment(Equipment equipment, File picture, int quantity){
+      try {
+         Equipment update = this.getEquipment(equipment);
+         if(update != null)
+         {
+            update.setPicture(picture);
+            update.setQuantity(quantity);
+            return true;
+         }
+         else {
+            return false;
+         }
+            
+      }
+      catch(Exception e) {
+         return false;
+      }
    }
    
    public boolean deleteEquipment(Equipment equipment){
@@ -174,4 +260,52 @@ public class SystemDao {
       return null;
    }
    
+   public Employee searchUser(String firstName, String lastName)
+   {
+      for(Manager m: this.managers)
+      {
+         if(!m.getUserInfo().getUserName().equals("user") && 
+               m.getPersonalInfo().getFirstName().toLowerCase().equals(firstName.toLowerCase()) && 
+               m.getPersonalInfo().getLastName().toLowerCase().equals(lastName.toLowerCase()))
+         {
+            return m;
+         }
+      }
+      
+      for(Trainer t: this.trainers)
+      {
+         if(t.getPersonalInfo().getFirstName().toLowerCase().equals(firstName.toLowerCase()) && 
+               t.getPersonalInfo().getLastName().toLowerCase().equals(lastName.toLowerCase()))
+         {
+            return t;
+         }
+      }
+      
+      return null;
+   }
+   
+   public Customer searchCustomer(String firstName, String lastName)
+   {
+      for(Customer c: this.customers)
+      {
+         if(c.getPersonalInfo().getFirstName().toLowerCase().equals(firstName.toLowerCase()) && 
+               c.getPersonalInfo().getLastName().toLowerCase().equals(lastName.toLowerCase()))
+         {
+            return c;
+         }
+      }
+      
+      return null;
+   }
+   
+   public Equipment searchEquipment(String name)
+   {
+      for(Equipment e: this.equipmentInventory)
+      {
+         if(e.getName().toLowerCase().equals(name.toLowerCase())) {
+            return e;
+         }
+      }
+      return null;
+   }
 }
