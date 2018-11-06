@@ -165,7 +165,7 @@ public class GymSystemCreator {
    public WorkoutRoutine createWorkoutRoutine(String name, ArrayList<Exercise> exercises)
    {
       WorkoutRoutine wr = null;
-      if(name != null && exercises != null)
+      if(name != null)
       {
          if(!name.equals(""))
          {
