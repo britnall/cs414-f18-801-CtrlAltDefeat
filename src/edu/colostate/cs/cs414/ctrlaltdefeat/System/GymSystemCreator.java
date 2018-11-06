@@ -151,9 +151,10 @@ public class GymSystemCreator {
       if(name != null && picturePath != null && quantityStr != null)
       {
          File picture = new File(picturePath);
-         int quantity = Integer.parseInt(quantityStr);
-         if(!name.equals("") && picture.exists())
+         
+         if(!name.equals("") && !quantityStr.equals("") && picture.exists())
          {
+            int quantity = Integer.parseInt(quantityStr);
             e = new Equipment(name, picture, quantity);
          }
       }

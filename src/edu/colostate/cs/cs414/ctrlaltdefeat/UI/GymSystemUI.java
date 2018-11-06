@@ -671,6 +671,7 @@ public class GymSystemUI {
                   endTime.setText("");
                   createSchedulePanel.setVisible(false);
                   addEmployeePanel.setVisible(true);
+                  loginInfoPanel.setVisible(true);
                } else {
                   JOptionPane.showMessageDialog(mainMenuPanel, success.info);
                }

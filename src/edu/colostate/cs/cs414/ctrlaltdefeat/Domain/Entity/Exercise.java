@@ -85,7 +85,13 @@ public class Exercise {
 
    @Override
    public String toString() {
+      // can handle null equipment
+      String equipmentName = "None";
+      if(equipment != null)
+      {
+         equipmentName = equipment.getName();
+      }
       return "Exercise [name=" + name + ", numOfSets=" + numOfSets + ", numOfReps=" + numOfReps + ", equipment="
-            + equipment.getName() + "]";
+            + equipmentName + "]";
    }
 }
