@@ -50,6 +50,7 @@ public class GymSystemUI {
    Equipment equipmentSearched = null;
    ArrayList<JTextField> userInfoTextFields = new ArrayList<JTextField>();
    ArrayList<JTextField> allTextFields = new ArrayList<JTextField>();
+   WorkoutRoutine addedWR = null;
    ArrayList<Exercise> newExercises = new ArrayList<Exercise>();
    UserType newEmployeeType = null;
    String action = "";
@@ -152,16 +153,32 @@ public class GymSystemUI {
       lblMainMenu.setBounds(272, 20, 95, 21);
       lblMainMenu.setFont(new Font("Lucida Grande", Font.BOLD, 17));
       mainMenuPanel.add(lblMainMenu);
+      
+      JPanel createSchedulePanel = new JPanel();
+      createSchedulePanel.setBounds(0, 71, 637, 367);
+      mainMenuPanel.add(createSchedulePanel);
+      createSchedulePanel.setLayout(null);
 
       JButton btnLogout = new JButton("Logout");
       btnLogout.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
             // logout of system
             JOptionPane.showMessageDialog(mainMenuPanel, "Successfully logged out.");
+            LoginPanel.setVisible(true);
+            addEquipmentPanel.setVisible(false);
             addEmployeePanel.setVisible(false);
+            createWorkoutPanel.setVisible(false);
+            createSchedulePanel.setVisible(false);
+            mainMenuPanel.setVisible(false);
             ManagerMenu.setVisible(false);
             TrainerMenu.setVisible(false);
-            LoginPanel.setVisible(true);
+            
+            clearTextFields();
+
+            txtDisplayScheduleHere.setText("");
+            txtListExercisesHere.setText("");
+            txtDisplayCustomerInfo.setText("");
+            
             currentUser = null;
          }
       });
@@ -463,10 +480,7 @@ public class GymSystemUI {
       lblSearchLastName.setBounds(117, 58, 70, 16);
       searchPanel.add(lblSearchLastName);
 
-      JPanel createSchedulePanel = new JPanel();
-      createSchedulePanel.setBounds(0, 71, 637, 367);
-      mainMenuPanel.add(createSchedulePanel);
-      createSchedulePanel.setLayout(null);
+
 
       JButton btnAddWorkSchedule = new JButton("Work Schedule");
       btnAddWorkSchedule.addActionListener(new ActionListener() {
@@ -865,13 +879,16 @@ public class GymSystemUI {
             if (customerSearched == null) {
                JOptionPane.showMessageDialog(mainMenuPanel, "Search Customer to Assign Workout To.");
             } else {
-               WorkoutRoutine wr = GymSystemCreator.getInstance().createWorkoutRoutine(workoutName.getText(), newExercises);
-               if(wr != null)
+               
+               if(addedWR != null)
                {
-                  Response success = GymSystemController.getInstance().assignWorkoutRoutine(customerSearched, wr);
+                  Response success = GymSystemController.getInstance().assignWorkoutRoutine(customerSearched, addedWR);
                   
                   if(success.successful) {
                      JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+                     
+                     addedWR = null; 
+                     
                      String s = customerSearched.getPersonalInfo().getFirstName() + " "
                            + customerSearched.getPersonalInfo().getLastName() + "\n";
 
@@ -908,14 +925,30 @@ public class GymSystemUI {
          public void actionPerformed(ActionEvent e) {
             Exercise ex = GymSystemCreator.getInstance().createExercise(exerciseName.getText(), numReps.getText(), numSets.getText(), equipment.getText());
             if(ex != null)
-            {
+            {     
+               for (WorkoutRoutine w: customerSearched.getWorkoutRoutines())
+               {
+                  if(w.getName().equals(workoutName.getText()))
+                  {
+                     addedWR = w;
+                     newExercises = addedWR.getExercises();
+                  }
+               }
+              
+               if(addedWR == null)
+               {
+                  addedWR = GymSystemCreator.getInstance().createWorkoutRoutine(workoutName.getText(), null);
+                  newExercises = new ArrayList<Exercise>();
+               }
+                              
                newExercises.add(ex);
+               addedWR.setExercises(newExercises);             
             } else {
                JOptionPane.showMessageDialog(mainMenuPanel, "Exercise information is not valid.");
             }
             
             String s = "[" + workoutName.getText() + "]\n";
-            for (Exercise exer : newExercises) {
+            for (Exercise exer : addedWR.getExercises()) {
                s += exer.toString() + "\n";
             }
 
@@ -1165,6 +1198,10 @@ public class GymSystemUI {
                TrainerMenu.setVisible(true);
             }
             clearTextFields();
+
+            txtDisplayScheduleHere.setText("");
+            txtListExercisesHere.setText("");
+            txtDisplayCustomerInfo.setText("");
          }
       });
 
