@@ -12,9 +12,6 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import edu.colostate.cs.cs414.ctrlaltdefeat.Controllers.GymSystemController;
-import edu.colostate.cs.cs414.ctrlaltdefeat.Controllers.GymSystemCreator;
-import edu.colostate.cs.cs414.ctrlaltdefeat.Controllers.Response;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Equipment;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Exercise;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.WorkoutRoutine;
@@ -30,6 +27,9 @@ import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.PersonalInform
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Schedule;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Weekday;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.WorkTime;
+import edu.colostate.cs.cs414.ctrlaltdefeat.System.GymSystemController;
+import edu.colostate.cs.cs414.ctrlaltdefeat.System.GymSystemCreator;
+import edu.colostate.cs.cs414.ctrlaltdefeat.System.Response;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;

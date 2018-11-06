@@ -1,4 +1,4 @@
-package edu.colostate.cs.cs414.ctrlaltdefeat.Controllers;
+package edu.colostate.cs.cs414.ctrlaltdefeat.System;
 
 public class Response {
    

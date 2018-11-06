@@ -1,4 +1,4 @@
-package edu.colostate.cs.cs414.ctrlaltdefeat.Controllers;
+package edu.colostate.cs.cs414.ctrlaltdefeat.System;
 
 import java.io.File;
 import java.nio.file.Paths;
