@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path=""/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-10">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/brittanynall/Documents/GitHub/cs414-f18-801-CtrlAltDefeat/xstream-1.4.11.1.jar"/>
-	<classpathentry kind="lib" path="/Applications/Eclipse.app/Contents/Eclipse/plugins/org.junit.jupiter.api_5.1.0.v20180327-1502.jar" sourcepath="/Applications/Eclipse.app/Contents/Eclipse/plugins/org.junit.jupiter.api.source_5.1.0.v20180327-1502.jar">
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5">
 		<attributes>
-			<attribute name="javadoc_location" value="http://junit.org/junit5/docs/current/api/"/>
+			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Applications/Eclipse.app/Contents/Eclipse/plugins/org.junit.platform.suite.api_1.1.0.v20180327-1502.jar" sourcepath="/Applications/Eclipse.app/Contents/Eclipse/plugins/org.junit.platform.suite.api.source_1.1.0.v20180327-1502.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://junit.org/junit5/docs/current/api/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="lib" path="xstream-1.4.11.1.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

@@ -4,8 +4,6 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.runner.RunWith;
 
-import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Manager;
-
 @RunWith(JUnitPlatform.class)
 @SelectClasses( { AddressTest.class, CustomerTest.class, 
                   EmployeeTest.class, EmployeeTest.class,
