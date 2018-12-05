@@ -12,6 +12,7 @@ import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Trainer;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.User;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Address;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.PersonalInformation;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.TimeOfDay;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Weekday;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.WorkTime;
 
@@ -101,15 +102,16 @@ public class GymSystemCreator {
       return c;
    }
    
-   public WorkTime createWorkTime(String start, String end, Weekday day)
+   public WorkTime createWorkTime(TimeOfDay start, TimeOfDay end, Weekday day)
    {
       WorkTime wt = null;
       if(start != null && end != null && day != null)
       {
-         if(!start.equals("") && !end.equals(""))
+         // Validate that start time is before end time
+         if(start.ordinal() < end.ordinal())
          {
             wt = new WorkTime(start, end, day);
-         }
+         }        
       }
       
       return wt;

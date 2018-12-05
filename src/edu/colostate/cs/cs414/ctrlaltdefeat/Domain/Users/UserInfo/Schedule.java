@@ -1,28 +1,42 @@
  package edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 public class Schedule {
    
-   private Set<WorkTime> workSchedule;
+   private ArrayList<WorkTime> workSchedule;
 	
 	public Schedule() 
 	{
-	   workSchedule = new HashSet<WorkTime>();
+	   workSchedule = new ArrayList<WorkTime>();
+	   
+	   // Schedule should be organized by day of the week starting
+      // with Sunday and ending with Saturday
+	   
+	   for(int i = 0; i < Weekday.values().length; i++)
+	   {
+	      workSchedule.add(null);
+	   }
 	}
 	
 	public boolean addWorkTime(WorkTime w)
 	{
-	   return workSchedule.add(w);
+	   // Make sure the schedule doesn't already have
+	   // WorkTime for that day. If so, override it.
+	   
+	   workSchedule.remove(w.getDayOfWeek().ordinal());
+	   workSchedule.add(w.getDayOfWeek().ordinal(), w);
+	   
+	   return true;
 	}
 	
 	public boolean removeWorkTime(WorkTime w)
 	{
-	   return workSchedule.remove(w);
+	   boolean results = workSchedule.remove(w);
+	   return results;
 	}
 	
-	public Set<WorkTime> getWorkTime()
+	public ArrayList<WorkTime> getWorkTime()
 	{
 	   return this.workSchedule;
 	}
@@ -32,7 +46,10 @@ public class Schedule {
       String s  = "";
       for(WorkTime w: workSchedule)
       {
-         s += w.toString() + "\n";
+         if(w != null)
+         {
+            s += w.toString() + "\n";
+         }         
       }
       return s;
    }

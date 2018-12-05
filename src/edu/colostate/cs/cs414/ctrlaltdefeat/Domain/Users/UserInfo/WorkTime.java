@@ -1,29 +1,29 @@
 package edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo;
 
 public class WorkTime {
-	private String startTime;
-	private String endTime;
+	private TimeOfDay startTime;
+	private TimeOfDay endTime;
 	private Weekday dayOfWeek;
 	
-	public WorkTime(String start, String end, Weekday day) {
+	public WorkTime(TimeOfDay start, TimeOfDay end, Weekday day) {
 		this.startTime = start;
 		this.endTime = end;
 		this.dayOfWeek = day;
 	}
 
-   public String getStartTime() {
+   public TimeOfDay getStartTime() {
       return startTime;
    }
 
-   public void setStartTime(String startTime) {
+   public void setStartTime(TimeOfDay startTime) {
       this.startTime = startTime;
    }
 
-   public String getEndTime() {
+   public TimeOfDay getEndTime() {
       return endTime;
    }
 
-   public void setEndTime(String endTime) {
+   public void setEndTime(TimeOfDay endTime) {
       this.endTime = endTime;
    }
 
@@ -37,7 +37,7 @@ public class WorkTime {
 
    @Override
    public String toString() {
-      return "[startTime=" + startTime + ", endTime=" + endTime + ", dayOfWeek=" + dayOfWeek + "]";
+      return "[start=" + startTime + ", end=" + endTime + ", day=" + dayOfWeek + "]";
    }
 
    @Override

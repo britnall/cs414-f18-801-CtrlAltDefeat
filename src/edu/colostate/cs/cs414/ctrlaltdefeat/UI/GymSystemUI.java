@@ -25,6 +25,7 @@ import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Address;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.MembershipStatus;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.PersonalInformation;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Schedule;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.TimeOfDay;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Weekday;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.WorkTime;
 import edu.colostate.cs.cs414.ctrlaltdefeat.System.GymSystemController;
@@ -81,8 +82,6 @@ public class GymSystemUI {
    private JTextArea txtDisplayCustomerInfo;
    private JTextArea txtListExercisesHere;
    private JTextField uSearchLastName;
-   private JTextField startTime;
-   private JTextField endTime;
    private JTextArea txtDisplayScheduleHere;
 
    /**
@@ -627,18 +626,16 @@ public class GymSystemUI {
       weekday.setModel(new DefaultComboBoxModel(Weekday.values()));
       weekday.setBounds(155, 116, 136, 27);
       createSchedulePanel.add(weekday);
-
-      startTime = new JTextField();
+      
+      JComboBox startTime = new JComboBox();
+      startTime.setModel(new DefaultComboBoxModel(TimeOfDay.values()));
       startTime.setBounds(155, 40, 130, 26);
       createSchedulePanel.add(startTime);
-      startTime.setColumns(10);
-      allTextFields.add(startTime);
-
-      endTime = new JTextField();
+      
+      JComboBox endTime = new JComboBox();
+      endTime.setModel(new DefaultComboBoxModel(TimeOfDay.values()));
       endTime.setBounds(155, 78, 130, 26);
       createSchedulePanel.add(endTime);
-      endTime.setColumns(10);
-      allTextFields.add(endTime);
 
       txtDisplayScheduleHere = new JTextArea();
       txtDisplayScheduleHere.setBounds(262, 163, 353, 202);
@@ -650,7 +647,8 @@ public class GymSystemUI {
       JButton btnAdd_1 = new JButton("Add");
       btnAdd_1.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
-            WorkTime w =  GymSystemCreator.getInstance().createWorkTime(startTime.getText(), endTime.getText(), (Weekday) weekday.getSelectedItem());
+            WorkTime w =  GymSystemCreator.getInstance().createWorkTime(
+                  (TimeOfDay) startTime.getSelectedItem(), (TimeOfDay) endTime.getSelectedItem(), (Weekday) weekday.getSelectedItem());
             
             if(w != null)
             {
@@ -681,8 +679,6 @@ public class GymSystemUI {
                if (success.successful) {
                   JOptionPane.showMessageDialog(mainMenuPanel, success.info);
                   employeeSearched = (Employee) t;
-                  startTime.setText("");
-                  endTime.setText("");
                   createSchedulePanel.setVisible(false);
                   addEmployeePanel.setVisible(true);
                   loginInfoPanel.setVisible(true);
