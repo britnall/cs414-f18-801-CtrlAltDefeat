@@ -1,14 +1,22 @@
 package edu.colostate.cs.cs414.ctrlaltdefeat.UI;
 
-import javax.swing.JFrame;
-import javax.swing.JTextArea;
-
 import java.awt.BorderLayout;
-import javax.swing.JPanel;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
@@ -31,17 +39,6 @@ import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.WorkTime;
 import edu.colostate.cs.cs414.ctrlaltdefeat.System.GymSystemController;
 import edu.colostate.cs.cs414.ctrlaltdefeat.System.GymSystemCreator;
 import edu.colostate.cs.cs414.ctrlaltdefeat.System.Response;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.awt.event.ActionEvent;
-import java.awt.Color;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 
 public class GymSystemUI {
 
