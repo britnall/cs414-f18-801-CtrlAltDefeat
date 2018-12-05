@@ -16,16 +16,22 @@ import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.TimeOfDay;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Weekday;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.WorkTime;
 
+/**
+ * Creator used to validate and create objects for the Gym Management system
+ *
+ */
 public class GymSystemCreator {
    
    private static final GymSystemCreator instance = new GymSystemCreator();
    
+   /**
+    * Singleton pattern so only 1 GymSystemCreator can be used
+    * @return GymSystemCreator
+    */
    public static GymSystemCreator getInstance(){ return instance; }
    
    private GymSystemCreator()
-   {
-      
-   }
+   {}
    
    public User createUser(String userName, String password) {
       User u = null;

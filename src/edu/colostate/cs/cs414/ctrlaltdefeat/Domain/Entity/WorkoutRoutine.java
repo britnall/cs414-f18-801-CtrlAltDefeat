@@ -2,23 +2,40 @@ package edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity;
 
 import java.util.ArrayList;
 
+/**
+ * Workout Routine that contains a list of Exercises
+ *
+ */
 public class WorkoutRoutine {
-   private String name;
-   private ArrayList<Exercise> exercises;
+   private String name;                      // name of workout routine
+   private ArrayList<Exercise> exercises;    // list of exercises
    
+   /**
+    * @param name - name of workout routine
+    * @param exercises - list of exercises
+    */
    public WorkoutRoutine(String name, ArrayList<Exercise> exercises) {
       this.name = name;
       this.exercises = exercises;
    }
    
+   /**
+    * @return name of workout routine
+    */
    public String getName() {
       return name;
    }
 
+   /**
+    * @return list of exercises
+    */
    public ArrayList<Exercise> getExercises() {
       return exercises;
    }
    
+   /**
+    * @param exercises - list of exercises
+    */
    public void setExercises(ArrayList<Exercise> exercises) {
       this.exercises = exercises;
    }
@@ -57,9 +74,7 @@ public class WorkoutRoutine {
 
    @Override
    public String toString() {
-      return "WorkoutRoutine [name=" + name + "]";
+      return "WorkoutRoutine [Name=" + name + "]";
    }
-   
-   
    
 }

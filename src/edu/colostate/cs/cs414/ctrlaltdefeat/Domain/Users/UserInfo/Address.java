@@ -1,11 +1,15 @@
 package edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo;
 
 
+/**
+ * Address Information for Gym System
+ *
+ */
 public class Address {
 
-   private String street;
-   private String state;
-   private String city;
+   private String street;     
+   private String state;      
+   private String city;       
    private String zipCode;
    
    public Address(String street, String state, String city, String zipCode) {
@@ -38,16 +42,6 @@ public class Address {
    }
    public void setZipCode(String zipCode) {
       this.zipCode = zipCode;
-   }
-   
-   public boolean isValid()
-   {
-      if(street.equals("") && city.equals("") && 
-            state.equals("") && zipCode.equals(""))
-      {
-         return false;
-      }
-      return true;
    }
 
    @Override

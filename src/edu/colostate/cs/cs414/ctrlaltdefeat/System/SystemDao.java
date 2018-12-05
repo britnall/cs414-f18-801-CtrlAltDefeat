@@ -14,6 +14,11 @@ import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.User;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.MembershipStatus;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.PersonalInformation;
 
+/**
+ * Contains sets of all users and information in the Gym Management System
+ * 
+ * This object is serialized to XML using XStream
+ */
 public class SystemDao {
    
    Set<Manager> managers;
@@ -30,6 +35,10 @@ public class SystemDao {
       equipmentInventory = new HashSet<Equipment>();            
    }
    
+   /**
+    * Singleton pattern so only 1 SystemDao can be used
+    * @return SystemDao
+    */
    public static SystemDao getInstance(){
       return instance;
    }

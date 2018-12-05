@@ -1,36 +1,63 @@
 package edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo;
 
+/**
+ * Start and End Time for a Day of the Week
+ *
+ */
 public class WorkTime {
-	private TimeOfDay startTime;
-	private TimeOfDay endTime;
-	private Weekday dayOfWeek;
+	private TimeOfDay startTime;    // time work shift start
+	private TimeOfDay endTime;      // time work shift ends
+	private Weekday dayOfWeek;      // day of work shift
 	
+	/**
+	 * @param start - time work shift start
+	 * @param end - time work shift ends
+	 * @param day - day of work shift
+	 */
 	public WorkTime(TimeOfDay start, TimeOfDay end, Weekday day) {
 		this.startTime = start;
 		this.endTime = end;
 		this.dayOfWeek = day;
 	}
 
+   /**
+    * @return time work shift start
+    */
    public TimeOfDay getStartTime() {
       return startTime;
    }
 
+   /**
+    * @param startTime - time work shift start
+    */
    public void setStartTime(TimeOfDay startTime) {
       this.startTime = startTime;
    }
 
+   /**
+    * @return time work shift ends
+    */
    public TimeOfDay getEndTime() {
       return endTime;
    }
 
+   /**
+    * @param endTime - time work shift ends
+    */
    public void setEndTime(TimeOfDay endTime) {
       this.endTime = endTime;
    }
 
+   /**
+    * @return day of work shift
+    */
    public Weekday getDayOfWeek() {
       return dayOfWeek;
    }
 
+   /**
+    * @param dayOfWeek - day of work shift
+    */
    public void setDayOfWeek(Weekday dayOfWeek) {
       this.dayOfWeek = dayOfWeek;
    }

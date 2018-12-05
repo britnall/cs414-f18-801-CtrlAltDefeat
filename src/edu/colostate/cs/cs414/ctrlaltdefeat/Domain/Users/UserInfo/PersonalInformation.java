@@ -1,5 +1,9 @@
 package edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo;
 
+/**
+ * Personal information for Gym System
+ *
+ */
 public class PersonalInformation {
    
    private String firstName;
@@ -48,16 +52,6 @@ public class PersonalInformation {
 	}
    public void setAddress(Address address) {
       this.address = address;
-   }
-   
-   public boolean isValid()
-   {
-      if(firstName.equals("")  && lastName.equals("") && email.equals("") && 
-            phone.equals("") && healthInsuranceProvider.equals(""))
-      {
-         return false;
-      }
-      return true;
    }
 
    @Override

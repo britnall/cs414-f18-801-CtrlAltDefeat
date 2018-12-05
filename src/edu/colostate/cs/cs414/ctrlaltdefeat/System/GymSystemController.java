@@ -17,6 +17,10 @@ import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Manager;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Trainer;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.User;
 
+/**
+ * Controller used to manipulate data and objects in the Gym Management system
+ *
+ */
 public class GymSystemController {
 
    private static final GymSystemController instance = new GymSystemController();
@@ -24,12 +28,18 @@ public class GymSystemController {
    SystemDao dao;
    List list;
    
+   /**
+    * Sets up Gym Management System with a default user 
+    * or use gym system from deserialization 
+    */
    private GymSystemController(){
+      
+      // Use persistence XML serialization using XStream
       String path = Paths.get(".").toAbsolutePath().normalize().toString();
       PersistenceStrategy strategy = new FilePersistenceStrategy(new File(path));
       list = new XmlArrayList(strategy);
-      
-      if (list.isEmpty())
+           
+      if (list.isEmpty()) // Setup Gym System if it isn't already serialized
       {
          dao = SystemDao.getInstance();
          
@@ -40,14 +50,23 @@ public class GymSystemController {
          
          list.add(dao);
       }
-      else
+      else  // Use system from deserialized xml
       {
          dao = (SystemDao) list.get(0);
       }
    }
    
+   /**
+    * Singleton pattern so only 1 GymSystemController can be used
+    * @return GymSystemController
+    */
    public static GymSystemController getInstance(){ return instance; }
    
+   /**
+    * Writes the data to XML using XStream
+    * 
+    * This method is called any time anything in the system changes
+    */
    private void storeData()
    {
       assert list.size() == 1;
@@ -55,29 +74,45 @@ public class GymSystemController {
       list.add(dao);
    }
    
+   /**
+    * See if the login information is an employee in the system
+    * @param username - username used for login
+    * @param password - password used for login
+    * @return Employee with login information
+    */
    public Employee authenticateUser(String username, String password)
    {
       User login = new User(username, password);
       
+      // Check managers for login information
       for(Manager m: getManagers())
       {
          if(m.getUserInfo().equals(login))
          {
+            // Login provided is a manager
             return m;
          }
       }
       
+      // Check trainers for login information
       for(Trainer t: getTrainers())
       {
          if(t.getUserInfo().equals(login))
          {
+            // Login provided is a trainer
             return t;
          }
       }
       
+      // No employee found with login information
       return null;
    }
    
+   /**
+    * Add a Manager to the system
+    * @param manager - Manager to add
+    * @return Indicates whether manager was added
+    */
    public Response addManager(Manager manager){
       
       Response response = new Response();
@@ -92,6 +127,11 @@ public class GymSystemController {
       return response;
    }
    
+   /**
+    * Add a Trainer to the system
+    * @param trainer - Trainer to add
+    * @return Indicates whether trainer was added
+    */
    public Response addTrainer(Trainer trainer){
       
       Response response = new Response();
@@ -106,6 +146,11 @@ public class GymSystemController {
       return response;
    }
    
+   /**
+    * Add a Customer to the system
+    * @param customer - Customer to add
+    * @return Indicates whether customer was added
+    */
    public Response addCustomer(Customer customer){
       
       Response response = new Response();
@@ -120,6 +165,11 @@ public class GymSystemController {
       return response;
    }
    
+   /**
+    * Add Equipment to the system
+    * @param equipment - equipment to add
+    * @return Indicates whether equipment was added
+    */
    public Response addEquipment(Equipment equipment){
       
       Response response = new Response();
@@ -134,6 +184,12 @@ public class GymSystemController {
       return response;
       
    }
+   
+   /**
+    * Remove a manager from the system
+    * @param manager - manager to remove
+    * @return Indicates whether manager was removed
+    */
    public Response removeManager(Manager manager){
       
       Response response = new Response();
@@ -148,6 +204,11 @@ public class GymSystemController {
       return response;
    }
    
+   /**
+    * Remove a trainer from the system
+    * @param trainer - trainer to remove
+    * @return Indicates whether trainer was removed
+    */
    public Response removeTrainer(Trainer trainer){
       
       Response response = new Response();
@@ -162,6 +223,11 @@ public class GymSystemController {
       return response;
    }
    
+   /**
+    * Remove a customer from the system
+    * @param customer - customer to remove
+    * @return Indicates whether customer was removed
+    */
    public Response removeCustomer(Customer customer){
       
       Response response = new Response();
@@ -176,6 +242,11 @@ public class GymSystemController {
       return response;
    }
    
+   /**
+    * Remove a equipment from the system
+    * @param equipment - equipment to remove
+    * @return Indicates whether equipment was removed
+    */
    public Response removeEquipment(Equipment equipment){
       
       Response response = new Response();

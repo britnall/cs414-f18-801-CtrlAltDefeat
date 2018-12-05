@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Schedule;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.TimeOfDay;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Weekday;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.WorkTime;
 
@@ -16,7 +17,7 @@ class ScheduleTest {
    @BeforeEach
    void setUp() throws Exception {
       testSchedule = new Schedule();
-      worktime = new WorkTime("09:00", "06:00", Weekday.MONDAY);
+      worktime = new WorkTime(TimeOfDay._10AM, TimeOfDay._1PM, Weekday.MONDAY);
    }
 
    @AfterEach
