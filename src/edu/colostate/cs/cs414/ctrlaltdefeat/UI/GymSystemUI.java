@@ -10,12 +10,14 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -64,7 +66,7 @@ public class GymSystemUI {
    private JPanel addEquipmentPanel;
    private JPanel createWorkoutPanel;
    private JTextField loginUsername;
-   private JTextField loginPassword;
+   private JPasswordField loginPassword;
    private JTextField equipmentName;
    private JTextField equipmentQuantity;
    private JTextField eqPicturePath;
@@ -80,6 +82,7 @@ public class GymSystemUI {
    private JTextArea txtListExercisesHere;
    private JTextField uSearchLastName;
    private JTextArea txtDisplayScheduleHere;
+   private ImageIcon image;
 
    /**
     * Launch the application.
@@ -133,9 +136,10 @@ public class GymSystemUI {
       loginUsername = new JTextField();
       loginUsername.setBounds(270, 162, 168, 26);
       loginUsername.setColumns(10);
-      loginPassword = new JTextField();
+      loginPassword = new JPasswordField();
       loginPassword.setBounds(270, 190, 168, 26);
       loginPassword.setColumns(10);
+      loginPassword.setEchoChar('*');
       LoginPanel.add(loginUsername);
       LoginPanel.add(loginPassword);
 
@@ -204,6 +208,11 @@ public class GymSystemUI {
       JPanel searchEquipPanel = new JPanel();
       searchEquipPanel.setBounds(0, 55, 631, 71);
       addEquipmentPanel.add(searchEquipPanel);
+      
+      image = new ImageIcon("");
+      JLabel imageLabel = new JLabel(image);
+      imageLabel.setBounds(337, 138, 275, 207);
+      addEquipmentPanel.add(imageLabel);
 
       JLabel lblLoginInformation = new JLabel("Login Information");
       lblLoginInformation.setFont(new Font("Lucida Grande", Font.ITALIC, 13));
@@ -697,31 +706,31 @@ public class GymSystemUI {
       createSchedulePanel.add(lblWorkTime);
 
       JLabel lblEquipmentName = new JLabel("Equipment Name:");
-      lblEquipmentName.setBounds(176, 160, 117, 16);
+      lblEquipmentName.setBounds(32, 160, 117, 16);
       addEquipmentPanel.add(lblEquipmentName);
 
       JLabel lblQuantity = new JLabel("Quantity:");
-      lblQuantity.setBounds(232, 198, 61, 16);
+      lblQuantity.setBounds(88, 198, 61, 16);
       addEquipmentPanel.add(lblQuantity);
 
       JLabel lblPathToPicture = new JLabel("Path to Picture:");
-      lblPathToPicture.setBounds(196, 236, 100, 16);
+      lblPathToPicture.setBounds(49, 236, 100, 16);
       addEquipmentPanel.add(lblPathToPicture);
 
       equipmentName = new JTextField();
-      equipmentName.setBounds(305, 155, 130, 26);
+      equipmentName.setBounds(161, 155, 130, 26);
       addEquipmentPanel.add(equipmentName);
       equipmentName.setColumns(10);
       allTextFields.add(equipmentName);
 
       equipmentQuantity = new JTextField();
-      equipmentQuantity.setBounds(305, 193, 130, 26);
+      equipmentQuantity.setBounds(161, 193, 130, 26);
       addEquipmentPanel.add(equipmentQuantity);
       equipmentQuantity.setColumns(10);
       allTextFields.add(equipmentQuantity);
 
       eqPicturePath = new JTextField();
-      eqPicturePath.setBounds(305, 231, 130, 26);
+      eqPicturePath.setBounds(161, 231, 130, 26);
       addEquipmentPanel.add(eqPicturePath);
       eqPicturePath.setColumns(10);
       allTextFields.add(eqPicturePath);
@@ -761,7 +770,7 @@ public class GymSystemUI {
             }
          }
       });
-      btnAdd.setBounds(196, 288, 117, 29);
+      btnAdd.setBounds(88, 288, 117, 29);
       addEquipmentPanel.add(btnAdd);
       searchEquipPanel.setLayout(null);
 
@@ -780,6 +789,8 @@ public class GymSystemUI {
          public void actionPerformed(ActionEvent e) {
             Equipment equip = GymSystemController.getInstance().searchEquipment(searchEquipName.getText());
             if (equip != null) {
+               image = new ImageIcon(equip.getPicture().getAbsolutePath());
+               imageLabel.setIcon(image);
                equipmentSearched = equip;
                equipmentName.setText(equip.getName());
                String q = String.valueOf(equip.getQuantity());
@@ -816,7 +827,7 @@ public class GymSystemUI {
             }
          }
       });
-      btnRemove.setBounds(318, 288, 117, 29);
+      btnRemove.setBounds(213, 288, 117, 29);
       addEquipmentPanel.add(btnRemove);
 
       createWorkoutPanel = new JPanel();
@@ -1284,7 +1295,7 @@ public class GymSystemUI {
       btnLogin.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
             Employee user = GymSystemController.getInstance().authenticateUser(loginUsername.getText(),
-                  loginPassword.getText());
+                  String.copyValueOf(loginPassword.getPassword()));
             if (user == null) {
                JOptionPane.showMessageDialog(LoginPanel, "Invalid Login.");
                loginPassword.setText("");
