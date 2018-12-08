@@ -2,6 +2,7 @@ package edu.colostate.cs.cs414.ctrlaltdefeat.System;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ import com.thoughtworks.xstream.persistence.PersistenceStrategy;
 import com.thoughtworks.xstream.persistence.XmlArrayList;
 
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Equipment;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Exercise;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.WorkoutRoutine;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Customer;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Employee;
@@ -181,8 +183,45 @@ public class GymSystemController {
          storeData();
       }
       
-      return response;
+      return response;    
+   }
+
+   /**
+    * Add exercise to the system
+    * @param exercise - exercise to add
+    * @return Indicates whether exercise was added
+    */
+   public Response addExercise(Exercise exercise){
       
+      Response response = new Response();
+      response.info = "Failed to add exercise.";
+      
+      if(dao.addExercise(exercise)){
+         response.successful = true;
+         response.info = "Exercise added successfully!";
+         storeData();
+      }
+      
+      return response;     
+   }
+   
+   /**
+    * Add workout routine to the system
+    * @param workout - workout routine to add
+    * @return Indicates whether workout routine was added
+    */
+   public Response addWorkoutRoutine(WorkoutRoutine workout){
+      
+      Response response = new Response();
+      response.info = "Failed to add workout routine.";
+      
+      if(dao.addWorkoutRoutine(workout)){
+         response.successful = true;
+         response.info = "Workout Routine added successfully!";
+         storeData();
+      }
+      
+      return response;     
    }
    
    /**
@@ -243,7 +282,7 @@ public class GymSystemController {
    }
    
    /**
-    * Remove a equipment from the system
+    * Remove an equipment from the system
     * @param equipment - equipment to remove
     * @return Indicates whether equipment was removed
     */
@@ -258,8 +297,45 @@ public class GymSystemController {
          storeData();
       }
       
-      return response;
+      return response;  
+   }
+   
+   /**
+    * Remove an exercise from the system
+    * @param exercise - exercise to remove
+    * @return Indicates whether exercise was removed
+    */
+   public Response removeExercise(Exercise exercise){
       
+      Response response = new Response();
+      response.info = "Failed to remove exercise.";
+      
+      if(dao.deleteExercise(exercise)){
+         response.successful = true;
+         response.info = "Exercise removed successfully!";
+         storeData();
+      }
+      
+      return response;  
+   }
+   
+   /**
+    * Remove a workout from the system
+    * @param workout - workout to remove
+    * @return Indicates whether workout was removed
+    */
+   public Response removeWorkoutRoutine(WorkoutRoutine workout){
+      
+      Response response = new Response();
+      response.info = "Failed to remove workout routine.";
+      
+      if(dao.deleteWorkoutRoutine(workout)){
+         response.successful = true;
+         response.info = "Workout Routine removed successfully!";
+         storeData();
+      }
+      
+      return response;  
    }
    
    public Response updateManager(Manager old, Manager update)
@@ -323,6 +399,30 @@ public class GymSystemController {
       return response; 
    }
    
+   public Response addExerciseToWorkout(Exercise exercise, WorkoutRoutine workoutRoutine){
+      
+      Response response = new Response();
+      response.info = "Failed to add exercise to workout routine.";
+      
+      ArrayList<Exercise> exercises = workoutRoutine.getExercises();
+      
+      if(exercises.contains(exercise))
+      {
+         response.info = "Exercise already in workout routine.";
+      }
+      else
+      {
+         exercises.add(exercise);
+         workoutRoutine.setExercises(exercises);
+         
+         response.successful = true;
+         response.info = "Added Exercise to Workout Routine Successfully!";
+         storeData();         
+      }
+      
+      return response;
+   }
+   
    public Response assignWorkoutRoutine(Customer customer, WorkoutRoutine workoutRoutine){
       
       Response response = new Response();
@@ -334,7 +434,6 @@ public class GymSystemController {
       storeData();
 
       return response;
-      
    }
    
    public Response unassignWorkoutRoutine(Customer customer, String workoutRoutineName){
@@ -353,8 +452,7 @@ public class GymSystemController {
          }
       }
 
-      return response;
-      
+      return response;    
    }
    
    public Employee searchUser(String firstName, String lastName)
@@ -371,6 +469,16 @@ public class GymSystemController {
    {
       return dao.searchEquipment(name);
    }
+   
+   public Exercise searchExercise(String name)
+   {
+      return dao.searchExercise(name);
+   }
+   
+   public WorkoutRoutine searchWorkoutRoutine(String name)
+   {
+      return dao.searchWorkoutRoutine(name);
+   }
 
    public Set<Manager> getManagers(){ 
       return dao.getManagers();
@@ -386,6 +494,14 @@ public class GymSystemController {
    
    public Set<Equipment> getEquipment(){      
       return dao.getEquipmentInventory();
+   }
+   
+   public Set<Exercise> getExercises(){      
+      return dao.getExercises();
+   }
+   
+   public Set<WorkoutRoutine> getWorkoutRoutines(){      
+      return dao.getWorkoutRoutines();
    }
    
 }

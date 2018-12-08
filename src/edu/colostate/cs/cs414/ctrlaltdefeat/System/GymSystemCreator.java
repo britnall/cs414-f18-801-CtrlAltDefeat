@@ -170,13 +170,15 @@ public class GymSystemCreator {
       return e;
    }
    
-   public WorkoutRoutine createWorkoutRoutine(String name, ArrayList<Exercise> exercises)
+   public WorkoutRoutine createWorkoutRoutine(String name, Exercise exercise)
    {
       WorkoutRoutine wr = null;
       if(name != null)
       {
          if(!name.equals(""))
          {
+            ArrayList<Exercise> exercises = new ArrayList<>();
+            exercises.add(exercise);
             wr = new WorkoutRoutine(name, exercises);
          }
       }

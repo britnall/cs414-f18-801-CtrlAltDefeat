@@ -74,7 +74,14 @@ public class WorkoutRoutine {
 
    @Override
    public String toString() {
-      return "WorkoutRoutine [Name=" + name + "]";
+      String s = "WorkoutRoutine [Name=" + name + " Exercises= ";
+      for(Exercise e: this.exercises)
+      {
+         s += e.getName() + " ";
+      }
+      s += "]";
+      
+      return  s;
    }
    
 }
