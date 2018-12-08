@@ -1,3 +1,4 @@
+
 package edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity;
 
 import java.util.ArrayList;
@@ -6,6 +7,11 @@ public class WorkoutRoutine {
    private String name;
    private ArrayList<Exercise> exercises;
    
+   
+   public WorkoutRoutine(String name) {
+	      this.name = name;
+	      this.exercises = new ArrayList<Exercise>();
+	   } 
    public WorkoutRoutine(String name, ArrayList<Exercise> exercises) {
       this.name = name;
       this.exercises = exercises;
@@ -14,6 +20,9 @@ public class WorkoutRoutine {
    public String getName() {
       return name;
    }
+   public void setName(String name) {
+	      this.name =  name;
+	   }
 
    public ArrayList<Exercise> getExercises() {
       return exercises;
@@ -57,7 +66,7 @@ public class WorkoutRoutine {
 
    @Override
    public String toString() {
-      return "WorkoutRoutine [name=" + name + "]";
+      return name + "\n";
    }
    
    

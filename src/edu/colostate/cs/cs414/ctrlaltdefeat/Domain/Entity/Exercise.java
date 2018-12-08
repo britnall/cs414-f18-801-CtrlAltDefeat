@@ -91,7 +91,7 @@ public class Exercise {
       {
          equipmentName = equipment.getName();
       }
-      return "Exercise [name=" + name + ", numOfSets=" + numOfSets + ", numOfReps=" + numOfReps + ", equipment="
-            + equipmentName + "]";
+      return name + ", numOfSets: " + numOfSets + ", numOfReps: " + numOfReps + ", equipment: "
+            + equipmentName +"\n";
    }
 }

@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Equipment;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Exercise;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.FitnessClass;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.WorkoutRoutine;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Customer;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Employee;
@@ -41,6 +42,8 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JScrollBar;
+import javax.swing.ImageIcon;
 
 public class GymSystemUI {
 
@@ -48,12 +51,14 @@ public class GymSystemUI {
    Employee employeeSearched = null;
    Customer customerSearched = null;
    Equipment equipmentSearched = null;
+   FitnessClass searchedClass = null;
    ArrayList<JTextField> userInfoTextFields = new ArrayList<JTextField>();
    ArrayList<JTextField> allTextFields = new ArrayList<JTextField>();
    ArrayList<Exercise> newExercises = new ArrayList<Exercise>();
    UserType newEmployeeType = null;
    String action = "";
    Schedule createdSchedule = null;
+   Schedule classSchedule = null;
 
    private JFrame frame;
    private JPanel contentPane;
@@ -64,26 +69,48 @@ public class GymSystemUI {
    private JPanel addEmployeePanel;
    private JPanel addEquipmentPanel;
    private JPanel createWorkoutPanel;
+   private JPanel assignRoutinesPanel;
+   private JPanel loginInfoPanel;
+   private JPanel searchPanel;
+   private JPanel searchEquipPanel;
+   private JPanel classesPanel;
+   
    private JTextField loginUsername;
    private JTextField loginPassword;
    private JTextField equipmentName;
    private JTextField equipmentQuantity;
    private JTextField eqPicturePath;
-   private JTextField searchEquipName;
    private JTextField uSearchFirstName;
-   private JTextField exerciseName;
+   private JTextField exerciseNamefield;
    private JTextField numReps;
    private JTextField numSets;
    private JTextField workoutName;
    private JTextField exSearchFName;
    private JTextField exSearchLName;
-   private JTextArea txtDisplayCustomerInfo;
-   private JTextArea txtListExercisesHere;
    private JTextField uSearchLastName;
    private JTextField startTime;
    private JTextField endTime;
+   private JTextField classAttendeesField;
+   private JTextField classNameField;
+   private JTextField maxClassSizeField;
+   private JTextField classStartTextField;
+   private JTextField classEndField;
+   
+   private JTextArea txtListGymRoutines;
+   private JTextArea txtDisplayCustomerInfo;
+   private JTextArea exercisesInRoutine;
    private JTextArea txtDisplayScheduleHere;
-
+   private JTextArea classTimesField;
+   private JTextArea classScheculetextArea;
+   
+   private JComboBox eInventoryComboBox;
+   private JComboBox exercisesListComboBox;
+   private JComboBox customersComboBox;
+   private JComboBox ClassListComboBox;
+   private JComboBox trainersComboBox;
+   private JComboBox classWeekday;
+   
+   private JLabel lblpicDisplay;
    /**
     * Launch the application.
     */
@@ -147,21 +174,996 @@ public class GymSystemUI {
       contentPane.add(mainMenuPanel, "name_49214182129467");
       mainMenuPanel.setLayout(null);
       mainMenuPanel.setVisible(false);
+      									
+                                          
+                                          JPanel currUserClassesPanel = new JPanel();
+                                          currUserClassesPanel.setBounds(0, 71, 639, 367);
+                                          mainMenuPanel.add(currUserClassesPanel);
+                                          currUserClassesPanel.setLayout(null);
+                                          
+                                          JLabel lblAssignedClasses = new JLabel("Assigned Classes");
+                                          lblAssignedClasses.setBounds(257, 19, 120, 16);
+                                          currUserClassesPanel.add(lblAssignedClasses);
+                                          
+                                          JComboBox assignedClassesComboBox = new JComboBox();
+                                          assignedClassesComboBox.addActionListener(new ActionListener() {
+                                          	public void actionPerformed(ActionEvent e) {
+                                          		if(!assignedClassesComboBox.getSelectedItem().equals("")) {
+                                          			FitnessClass fClass = GymSystemController.getInstance().searchGymClasses(assignedClassesComboBox.getSelectedItem().toString());
+                                          			classScheculetextArea.setText(fClass.getClassSchedule().toString());
+                                          		}
+                                          	}
+                                          });
+                                          assignedClassesComboBox.addItem("");
+                                          if(GymSystemController.getInstance().getGymClasses()!=null) {// && currentUser.getUserType().equals(UserType.TRAINER)) {
+                                        	  for(FitnessClass fc: GymSystemController.getInstance().getGymClasses()) {
+                                        		  if(fc.getInstructor().equals(currentUser)) {
+                                        			  assignedClassesComboBox.addItem(fc.getName());
+                                        		  }
+                                        	  }
+                                          }
+                                          assignedClassesComboBox.setBounds(257, 58, 120, 27);
+                                          currUserClassesPanel.add(assignedClassesComboBox);
+                                          
+                                          classScheculetextArea = new JTextArea();
+                                          classScheculetextArea.setBounds(188, 137, 261, 191);
+                                          currUserClassesPanel.add(classScheculetextArea);
+                                    
+                                          createWorkoutPanel = new JPanel();
+                                          createWorkoutPanel.setBounds(0, 53, 639, 391);
+                                          mainMenuPanel.add(createWorkoutPanel);
+                                          createWorkoutPanel.setLayout(null);
+                                          
+                                                JLabel lblExerciseName = new JLabel("Exercise Name:");
+                                                lblExerciseName.setBounds(6, 211, 96, 16);
+                                                createWorkoutPanel.add(lblExerciseName);
+                                                
+                                                      JLabel lblNumReps = new JLabel("Number of Repititions:");
+                                                      lblNumReps.setBounds(6, 275, 169, 16);
+                                                      createWorkoutPanel.add(lblNumReps);
+                                                      
+                                                            JLabel lblNumSets = new JLabel("Number of Sets:");
+                                                            lblNumSets.setBounds(6, 247, 149, 16);
+                                                            createWorkoutPanel.add(lblNumSets);
+                                                            
+                                                                  exerciseNamefield = new JTextField();
+                                                                  exerciseNamefield.setBounds(167, 206, 138, 26);
+                                                                  exerciseNamefield.setColumns(10);
+                                                                  createWorkoutPanel.add(exerciseNamefield);
+                                                                  allTextFields.add(exerciseNamefield);
+                                                                  
+                                                                        numReps = new JTextField();
+                                                                        numReps.setBounds(167, 270, 138, 26);
+                                                                        numReps.setColumns(10);
+                                                                        createWorkoutPanel.add(numReps);
+                                                                        allTextFields.add(numReps);
+                                                                        
+                                                                              numSets = new JTextField();
+                                                                              numSets.setBounds(167, 242, 138, 26);
+                                                                              numSets.setColumns(10);
+                                                                              createWorkoutPanel.add(numSets);
+                                                                              allTextFields.add(numSets);
+                                                                              
+                                                                                    workoutName = new JTextField();
+                                                                                    workoutName.setBounds(175, 67, 130, 26);
+                                                                                    createWorkoutPanel.add(workoutName);
+                                                                                    workoutName.setColumns(10);
+                                                                                    allTextFields.add(workoutName);
+                                                                                    
+                                                                                          JButton btnAddToWorkout = new JButton("Add to Workout Routine");
+                                                                                          btnAddToWorkout.setBounds(380, 223, 195, 29);
+                                                                                          btnAddToWorkout.addActionListener(new ActionListener() {
+                                                                                             public void actionPerformed(ActionEvent e) {
+                                                                                          	  WorkoutRoutine wr = GymSystemController.getInstance().searchRoutines(workoutName.getText());
+                                                                                                Exercise ex = GymSystemController.getInstance().searchExercise(exerciseNamefield.getText());
+                                                                                                if(wr!=null)
+                                                                                                {
+                                                                                                   if(ex!=null) {
+                                                                                                  	 wr.getExercises().add(ex);
+                                                                                                  	 String temp = "";
+                                                                                                  	 for(Exercise exercise : wr.getExercises()) {
+                                                                                                  		 temp+=exercise.toString();
+                                                                                                  	 }
+                                                                                                  	exercisesInRoutine.setText(temp);
+                                                                                                  	 
+                                                                                                   }
+                                                                                                   else {
+                                                                                                  	 JOptionPane.showMessageDialog(mainMenuPanel, "Exercise does not exist in the system.");
+                                                                                                   }
+                                                                                                } 
+                                                                                                else {
+                                                                                              	  JOptionPane.showMessageDialog(mainMenuPanel, "Workout Routine does not exist in the system.");
+                                                                                                }
+                                                                                             }
+                                                                                          });
+                                                                                          createWorkoutPanel.add(btnAddToWorkout);
+                                                                                          
+                                                                                                JLabel lblWorkoutRoutineName = new JLabel("Workout Routine Name:");
+                                                                                                lblWorkoutRoutineName.setBounds(6, 72, 149, 16);
+                                                                                                createWorkoutPanel.add(lblWorkoutRoutineName);
+                                                                                                
+                                                                                                      JLabel lblEquipment = new JLabel("Equipment:");
+                                                                                                      lblEquipment.setBounds(6, 306, 149, 16);
+                                                                                                      createWorkoutPanel.add(lblEquipment);
+                                                                                                      
+                                                                                                            JButton btnSave_1 = new JButton("Done");
+                                                                                                            btnSave_1.addActionListener(new ActionListener() {
+                                                                                                               public void actionPerformed(ActionEvent e) {
+                                                                                                                  createWorkoutPanel.setVisible(false);
+                                                                                                                  TrainerMenu.setVisible(true);
+                                                                                                                  clearTextFields();
+                                                                                                                  txtDisplayCustomerInfo.setText("");
+                                                                                                                  txtListGymRoutines.setText("");
+                                                                                                               }
+                                                                                                            });
+                                                                                                            btnSave_1.setBounds(423, 341, 117, 29);
+                                                                                                            createWorkoutPanel.add(btnSave_1);
+                                                                                                            
+                                                                                                            eInventoryComboBox = new JComboBox();
+                                                                                                            eInventoryComboBox.setBounds(167, 302, 138, 27);
+                                                                                                            createWorkoutPanel.add(eInventoryComboBox);
+                                                                                                            
+                                                                                                            JComboBox gymRoutinesCombobox = new JComboBox();
+                                                                                                            gymRoutinesCombobox.addActionListener(new ActionListener() {
+                                                                                                            	public void actionPerformed(ActionEvent e) {
+                                                                                                            		WorkoutRoutine routine = GymSystemController.getInstance().searchRoutines(gymRoutinesCombobox.getSelectedItem().toString());
+                                                                                                            		if(routine != null) {
+	                                                                                                            		workoutName.setText(routine.getName());
+	                                                                                                            		String exerciseList = "";
+	                                                                                                            		for(Exercise ex: routine.getExercises()) {
+	                                                                                                            			exerciseList += ex.toString();
+	                                                                                                            		}
+	                                                                                                            		exercisesInRoutine.setText(exerciseList);
+                                                                                                            		}
+                                                                                                            	}
+                                                                                                            });
+                                                                                                            gymRoutinesCombobox.setBounds(156, 20, 149, 27);
+                                                                                                            gymRoutinesCombobox.addItem("");
+                                                                                                            createWorkoutPanel.add(gymRoutinesCombobox);
+                                                                                                            
+                                                                                                            JLabel lblWorkoutRoutines = new JLabel("Workout Routines");
+                                                                                                            lblWorkoutRoutines.setBounds(6, 24, 127, 16);
+                                                                                                            createWorkoutPanel.add(lblWorkoutRoutines);
+                                                                                                            
+                                                                                                            JLabel lblExercises = new JLabel("Exercises:");
+                                                                                                            lblExercises.setBounds(16, 171, 96, 16);
+                                                                                                            createWorkoutPanel.add(lblExercises);
+                                                                                                            
+                                                                                                            exercisesListComboBox = new JComboBox();
+                                                                                                            exercisesListComboBox.addItem("");
+                                                                                                            exercisesListComboBox.addActionListener(new ActionListener() {
+                                                                                                            	public void actionPerformed(ActionEvent e) {
+	                                                                                                            	if(!exercisesListComboBox.getSelectedItem().toString().equals("")) {
+	                                                                                                            		Exercise ex = GymSystemController.getInstance().searchExercise(exercisesListComboBox.getSelectedItem().toString());
+	                                                                                                            		if(ex != null) {
+		                                                                                                            		exerciseNamefield.setText(ex.getName());
+		                                                                                                            		numReps.setText(ex.getNumOfReps().toString());
+		                                                                                                            		numSets.setText(ex.getNumOfSets().toString());
+		                                                                                                            		eInventoryComboBox.setSelectedItem(ex.getEquipment().getName());
+	                                                                                                            		}
+	                                                                                                            		else {
+	                                                                                                            			JOptionPane.showMessageDialog(mainMenuPanel, "Exercise does not exist in the system.");
+	                                                                                                            		}
+	                                                                                                            	}
+	                                                                                                            	else {
+	                                                                                                            		exerciseNamefield.setText("");
+	                                                                                                            		numReps.setText("");
+	                                                                                                            		numSets.setText("");
+	                                                                                                            		eInventoryComboBox.setSelectedItem("");
+	                                                                                                            	}
+                                                                                                            	}
+                                                                                                            });
+                                                                                                            exercisesListComboBox.setBounds(113, 167, 137, 27);
+                                                                                                            createWorkoutPanel.add(exercisesListComboBox);
+                                                                                                            
+                                                                                                            exercisesInRoutine = new JTextArea();
+                                                                                                            exercisesInRoutine.setWrapStyleWord(true);
+                                                                                                            exercisesInRoutine.setLineWrap(true);
+                                                                                                            exercisesInRoutine.setEditable(false);
+                                                                                                            exercisesInRoutine.setBounds(360, 46, 242, 124);
+                                                                                                            createWorkoutPanel.add(exercisesInRoutine);
+                                                                                                            
+                                                                                                            JLabel lblExercisesInRoutine = new JLabel("Exercises In Routine:");
+                                                                                                            lblExercisesInRoutine.setBounds(360, 24, 149, 16);
+                                                                                                            createWorkoutPanel.add(lblExercisesInRoutine);
+                                                                                                            
+                                                                                                            JButton btnRemoveFromWorkout = new JButton("Remove from Workout Routine");
+                                                                                                            btnRemoveFromWorkout.addActionListener(new ActionListener() {
+                                                                                                            	public void actionPerformed(ActionEvent e) {
+                                                                                                            		WorkoutRoutine wr = GymSystemController.getInstance().searchRoutines(workoutName.getText());
+                                                                                                                  Exercise ex = GymSystemController.getInstance().searchExercise(exerciseNamefield.getText());
+                                                                                                                  if(wr!=null)
+                                                                                                                  {
+                                                                                                                     if(ex!=null) {
+                                                                                                                    	 wr.getExercises().remove(ex);
+                                                                                                                    	 String exerciseList = "";
+                                                                                                                    	 for(Exercise exercise: wr.getExercises()) {
+                                                                                                                    		exerciseList += exercise.toString();
+                                                                                                                    	 }
+                                                                                                                    	exercisesInRoutine.setText(exerciseList);
+                                                                                                                    	 
+                                                                                                                     }
+                                                                                                                     else {
+                                                                                                                    	 JOptionPane.showMessageDialog(mainMenuPanel, "Exercise does not exist in the system.");
+                                                                                                                     }
+                                                                                                                  } 
+                                                                                                                  else {
+                                                                                                                	  JOptionPane.showMessageDialog(mainMenuPanel, "Workout Routine does not exist in the system.");
+                                                                                                                  }
+                                                                                                            	}
+                                                                                                            });
+                                                                                                            btnRemoveFromWorkout.setBounds(370, 182, 228, 29);
+                                                                                                            createWorkoutPanel.add(btnRemoveFromWorkout);
+                                                                                                            
+                                                                                                            JButton btnSaveExercise = new JButton("Save");
+                                                                                                            btnSaveExercise.addActionListener(new ActionListener() {
+                                                                                                    	  public void actionPerformed(ActionEvent e) {
+                                                                                                    		  
+                                                                                                    		  Exercise exercise = GymSystemCreator.getInstance().createExercise(exerciseNamefield.getText(), numReps.getText(), numSets.getText(), eInventoryComboBox.getSelectedItem().toString());
+                                                                                                    
+                                                                                                    		  if(exercise != null)
+                                                                                                                    {
+                                                                                                                       Response success = new Response();
+                                                                                                                       success = GymSystemController.getInstance().addExercise(exercise);
+                                                                                                                       
+                                                                                                                       if (!success.successful) {
+                                                                                                                          JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+                                                                                                                       } else {
+                                                                                                                          JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+
+                                                                                                                          // clear fields
+                                                                                                                          clearTextFields();
+                                                                                                                          //TODO: Display the current TO THE EXERCISE LIST
+                                                                                                                          exercisesListComboBox.addItem(exercise.getName());
+                                                                                                                       }
+                                                                                                                    } else {
+                                                                                                                       JOptionPane.showMessageDialog(mainMenuPanel, "Exercise Information is not valid");
+                                                                                                                    }
+                                                                                                    		  
+                                                                                                    	  }
+                                                                                                            });
+                                                                                                            btnSaveExercise.setBounds(16, 341, 117, 29);
+                                                                                                            createWorkoutPanel.add(btnSaveExercise);
+                                                                                                            
+                                                                                                            JButton btnDeleteExercise = new JButton("Delete");
+                                                                                                            btnDeleteExercise.addActionListener(new ActionListener() {
+                                                                                                            	public void actionPerformed(ActionEvent e) {
+                                                                                                            	Exercise exerciseSearched = GymSystemController.getInstance().searchExercise(exerciseNamefield.getText());
+                                                                                                            	if(exerciseSearched != null)
+                                                                                                                  {
+                                                                                                                     Response success = new Response();
+                                                                                                                     success = GymSystemController.getInstance().removeExercise(exerciseSearched);
+                                                                                                                     
+                                                                                                                     if (!success.successful) {
+                                                                                                                        JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+                                                                                                                     } else {
+                                                                                                                        JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+
+                                                                                                                        // clear fields
+                                                                                                                        clearTextFields();
+                                                                                                                        exercisesListComboBox.removeItem(exerciseSearched.getName());
+                                                                                                                     }
+                                                                                                                  }
+                                                                                                            	else {
+                                                                                                                     JOptionPane.showMessageDialog(mainMenuPanel, "Exercise was not found in the Gym's exercises");
+                                                                                                                  }
+                                                                                                            	}
+                                                                                                            });
+                                                                                                            btnDeleteExercise.setBounds(175, 341, 117, 29);
+                                                                                                            createWorkoutPanel.add(btnDeleteExercise);
+                                                                                                            
+                                                                                                            JButton btnSaveRoutine = new JButton("Save");
+                                                                                                            btnSaveRoutine.addActionListener(new ActionListener() {
+                                                                                                            	public void actionPerformed(ActionEvent e) {
+                                                                                                            		//TODO ADD WORKOUT ROUTINE TO GYM
+                                                                                                            		WorkoutRoutine routine = GymSystemCreator.getInstance().createWorkoutRoutine(workoutName.getText());
+                                                                                                            		if(routine != null)
+                                                                                                                  {
+                                                                                                                     Response success = new Response();
+                                                                                                                     success = GymSystemController.getInstance().addRoutine(routine);
+                                                                                                                     
+                                                                                                                     if (!success.successful) {
+                                                                                                                        JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+                                                                                                                     } else {
+                                                                                                                        JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+
+                                                                                                                        // clear fields
+                                                                                                                        clearTextFields();
+                                                                                                                        //exercisesListComboBox.removeItem(exerciseSearched);
+                                                                                                                        gymRoutinesCombobox.addItem(routine);
+                                                                                                                     }
+                                                                                                                  } else {
+                                                                                                                     JOptionPane.showMessageDialog(mainMenuPanel, "Routine Information was invalid");
+                                                                                                                  }
+                                                                                                            		
+                                                                                                            	}
+                                                                                                            });
+                                                                                                            btnSaveRoutine.setBounds(16, 110, 117, 29);
+                                                                                                            createWorkoutPanel.add(btnSaveRoutine);
+                                                                                                            
+                                                                                                            JButton btnDeleteRoutine = new JButton("Delete");
+                                                                                                            btnDeleteRoutine.addActionListener(new ActionListener() {
+                                                                                                            	public void actionPerformed(ActionEvent e) {
+                                                                                                            		WorkoutRoutine routine = GymSystemController.getInstance().searchRoutines(workoutName.getText());
+                                                                                                            		if(routine != null)
+                                                                                                                  {
+                                                                                                                     Response success = new Response();
+                                                                                                                     //TODO WHAT IF A CUSTOMER HAS THE ROUTINE ASSIGNED TO THEM???
+                                                                                                                     //RETURN NAMES OF CUSTOMERS WITH THE ROUTINE ASSIGNED??
+                                                                                                                     success = GymSystemController.getInstance().removeRoutine(routine);
+                                                                                                                     
+                                                                                                                     if (!success.successful) {
+                                                                                                                        JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+                                                                                                                     } else {
+                                                                                                                        JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+
+                                                                                                                        // clear fields
+                                                                                                                        clearTextFields();
+                                                                                                                        
+                                                                                                                        gymRoutinesCombobox.removeItem(routine);
+                                                                                                                     }
+                                                                                                                  } else {
+                                                                                                                     JOptionPane.showMessageDialog(mainMenuPanel, "Routine Information was invalid");
+                                                                                                                  }
+                                                                                                            		
+                                                                                                            	}
+                                                                                                            	
+                                                                                                            });
+                                                                                                            btnDeleteRoutine.setBounds(175, 110, 117, 29);
+                                                                                                            createWorkoutPanel.add(btnDeleteRoutine);
+                                                                                                            
+                                                                                                            JButton btnAssingRoutines = new JButton("Assign Workout Routines");
+                                                                                                            btnAssingRoutines.addActionListener(new ActionListener() {
+                                                                                                            	public void actionPerformed(ActionEvent e) {
+                                                                                                            		createWorkoutPanel.setVisible(false);
+                                                                                                            		assignRoutinesPanel.setVisible(true);
+                                                                                                            	}
+                                                                                                            });
+                                                                                                            btnAssingRoutines.setBounds(380, 275, 215, 29);
+                                                                                                            createWorkoutPanel.add(btnAssingRoutines);
+                              
+                              classesPanel = new JPanel();
+                              classesPanel.setBounds(0, 53, 639, 391);
+                              classesPanel.setVisible(false);
+                              mainMenuPanel.add(classesPanel);
+                              classesPanel.setLayout(null);
+                              
+                              JLabel lblClassName = new JLabel("Class Name:");
+                              lblClassName.setBounds(6, 49, 86, 16);
+                              classesPanel.add(lblClassName);
+                              
+                              JLabel lblInstructor = new JLabel("Instructor:");
+                              lblInstructor.setBounds(6, 77, 86, 16);
+                              classesPanel.add(lblInstructor);
+                              
+                              JLabel lblMaxClassSize = new JLabel("Max Class Size:");
+                              lblMaxClassSize.setBounds(6, 105, 106, 16);
+                              classesPanel.add(lblMaxClassSize);
+                              
+                              JLabel lblSchedule_1 = new JLabel("Class Schedule");
+                              lblSchedule_1.setBounds(68, 137, 134, 16);
+                              classesPanel.add(lblSchedule_1);
+                              
+                              classAttendeesField = new JTextField();
+                              classAttendeesField.setBounds(378, 133, 255, 229);
+                              classesPanel.add(classAttendeesField);
+                              classAttendeesField.setColumns(10);
+                              
+                              JLabel lblClassAttendees = new JLabel("Class Attendees:");
+                              lblClassAttendees.setBounds(378, 105, 117, 16);
+                              classesPanel.add(lblClassAttendees);
+                              
+                              JLabel lblCustomers = new JLabel("Customers:");
+                              lblCustomers.setBounds(378, 23, 86, 16);
+                              classesPanel.add(lblCustomers);
+                              
+                              customersComboBox = new JComboBox();
+                              customersComboBox.setBounds(476, 19, 157, 27);
+                              customersComboBox.addItem("");
+                              classesPanel.add(customersComboBox);
+                              if(GymSystemController.getInstance().getCustomers() != null) {
+                                  for(Customer c: GymSystemController.getInstance().getCustomers()) {
+                                		  customersComboBox.addItem(c.getPersonalInfo().getFirstName() + " " + c.getPersonalInfo().getLastName());
+                                  }
+								}
+                              if(GymSystemController.getInstance().getGymClasses()!= null) {
+                                  for(FitnessClass fc: GymSystemController.getInstance().getGymClasses()) {
+                                	  ClassListComboBox.addItem(fc.getName());
+                                  }
+                              }
+                              
+                              JButton btnAddAttendee = new JButton("Add");
+                              btnAddAttendee.addActionListener(new ActionListener() {
+                              	public void actionPerformed(ActionEvent e) {
+                              		String[] name = customersComboBox.getSelectedItem().toString().split(" ");
+                              		Customer c = GymSystemController.getInstance().searchCustomer(name[0], name[1]);
+                              		FitnessClass fc = GymSystemController.getInstance().searchGymClasses(classNameField.getText());
+                              		if(c != null) {
+                              			if(fc != null) {
+                              				fc.addAttendee(c);
+                              				classAttendeesField.removeAll();
+                              				String cList = "";
+                              				for(Customer customer : fc.getAttendees()) {
+                              					cList += customer.getPersonalInfo().getFirstName() + " " + customer.getPersonalInfo().getLastName() + " \n";
+                              				}
+                              				classAttendeesField.setText(cList);
+                              				
+                              			}
+                              			else{
+                              				JOptionPane.showMessageDialog(mainMenuPanel, "Class does not exist in the system.");
+                              			}
+                              		}
+                              		else {
+                              			JOptionPane.showMessageDialog(mainMenuPanel, "Customer does not exist in the system.");
+                              		}
+                              		
+                              	}
+                              });
+                              btnAddAttendee.setBounds(378, 71, 117, 29);
+                              classesPanel.add(btnAddAttendee);
+                              
+                              JButton btnRemoveAttendee = new JButton("Remove");
+                              btnRemoveAttendee.addActionListener(new ActionListener() {
+                              	public void actionPerformed(ActionEvent e) {
+                              		String[] name = customersComboBox.getSelectedItem().toString().split(" ");
+                              		Customer c = GymSystemController.getInstance().searchCustomer(name[0], name[1]);
+                              		FitnessClass fc = GymSystemController.getInstance().searchGymClasses(classNameField.getText());
+                              		if(c != null) {
+                              			if(fc != null) {
+                              				fc.removeAttendee(c);
+                              				classAttendeesField.removeAll();
+                              				String cList = "";
+                              				for(Customer customer : fc.getAttendees()) {
+                              					cList += customer.getPersonalInfo().getFirstName() + " " + customer.getPersonalInfo().getLastName() + " \n";
+                              				}
+                              				classAttendeesField.setText(cList);
+                              				
+                              			}
+                              			else{
+                              				JOptionPane.showMessageDialog(mainMenuPanel, "Class does not exist in the system.");
+                              			}
+                              		}
+                              		else {
+                              			JOptionPane.showMessageDialog(mainMenuPanel, "Customer does not exist in the system.");
+                              		}
+                              		
+                              	}
+                              });
+                              btnRemoveAttendee.setBounds(507, 71, 117, 29);
+                              classesPanel.add(btnRemoveAttendee);
+                              
+                              trainersComboBox = new JComboBox();
+                              trainersComboBox.setBounds(142, 73, 162, 27);
+                              classesPanel.add(trainersComboBox);
+                              trainersComboBox.addItem("");
+                              for(Trainer t : GymSystemController.getInstance().getTrainers()) {
+                            	  trainersComboBox.addItem(t.getPersonalInfo().getLastName() + ", " + t.getPersonalInfo().getFirstName());
+                              }
+                              
+                              classNameField = new JTextField();
+                              classNameField.setBounds(142, 44, 160, 26);
+                              classesPanel.add(classNameField);
+                              classNameField.setColumns(10);
+                              
+                              maxClassSizeField = new JTextField();
+                              maxClassSizeField.setColumns(10);
+                              maxClassSizeField.setBounds(144, 100, 160, 26);
+                              classesPanel.add(maxClassSizeField);
+                              
+                              JButton btnSave_Class = new JButton("Save");
+                              btnSave_Class.addActionListener(new ActionListener() {
+                              	public void actionPerformed(ActionEvent e) {
+                              		if(!trainersComboBox.getSelectedItem().toString().equals("") && !classNameField.equals("") && classSchedule != null && !maxClassSizeField.getText().equals("")) {
+                              			String [] temp = trainersComboBox.getSelectedItem().toString().split(", ");
+                              			Trainer classTrainer = (Trainer) GymSystemController.getInstance().searchUser(temp[1], temp[0]);
+                                        FitnessClass fitnessClass = GymSystemCreator.getInstance().createFitnessClass(classNameField.getText(), classTrainer, classSchedule, maxClassSizeField.getText());
+                                        
+                                        Response success = GymSystemController.getInstance().addGymClass(fitnessClass);
+                                        if(success.successful) {
+                                        	JOptionPane.showMessageDialog(mainMenuPanel, "Gym class successfully saved.");
+                                        	trainersComboBox.setSelectedItem("");
+                                        	classNameField.setText("");
+                                        	classSchedule = null;
+                                        	classTimesField.setText("");
+                                        	maxClassSizeField.setText("");
+                                        	ClassListComboBox.addItem(fitnessClass.getName());
+                                        }
+                                        else {
+                                        	JOptionPane.showMessageDialog(mainMenuPanel, "Unable to create Gym Class.");
+                                        }
+                              		}
+                              		else {
+                              			JOptionPane.showMessageDialog(mainMenuPanel, "Invlalid Class Information");
+                              		}
+                              		
+                              	}
+                              });
+                              
+                              btnSave_Class.setBounds(6, 356, 117, 29);
+                              classesPanel.add(btnSave_Class);
+                              
+                              JButton btnRemove_Class = new JButton("Remove");
+                              btnRemove_Class.setBounds(179, 356, 117, 29);
+                              btnRemove_Class.addActionListener(new ActionListener() {
+                                	public void actionPerformed(ActionEvent e) {
+                                		if(!ClassListComboBox.getSelectedItem().toString().equals("")) {
+                                            FitnessClass fitnessClass = GymSystemController.getInstance().searchGymClasses(ClassListComboBox.getSelectedItem().toString());
+                                            		
+                                            		
+                                            Response success = GymSystemController.getInstance().removeGymClass(fitnessClass);
+                                            if(success.successful) {
+                                            	JOptionPane.showMessageDialog(mainMenuPanel, "Gym class successfully deleted.");
+                                            	trainersComboBox.setSelectedItem("");
+                                            	classNameField.setText("");
+                                            	classSchedule = null;
+                                            	classTimesField.setText("");
+                                            	maxClassSizeField.setText("");
+                                            	ClassListComboBox.removeItem(fitnessClass.getName());
+                                            	classStartTextField.setText("");
+                                            	classEndField.setText("");
+                                            	
+                                            }
+                                            else {
+                                            	JOptionPane.showMessageDialog(mainMenuPanel, "Unable to delete Gym Class.");
+                                            }
+                                  		}
+                                  		else {
+                                  			JOptionPane.showMessageDialog(mainMenuPanel, "Select a class to delete");
+                                  		}
+                                	
+                                	}
+                                	
+                               });
+                              classesPanel.add(btnRemove_Class);
+                              
+                              JLabel lblClasses = new JLabel("Classes:");
+                              lblClasses.setBounds(6, 19, 61, 16);
+                              classesPanel.add(lblClasses);
+                              
+                              ClassListComboBox = new JComboBox();
+                              ClassListComboBox.addActionListener(new ActionListener() {
+                              	public void actionPerformed(ActionEvent e) {
+                              		if(ClassListComboBox.getSelectedItem().toString()!= null && !ClassListComboBox.getSelectedItem().toString().equals("")) {
+	                                          		FitnessClass fc = GymSystemController.getInstance().searchGymClasses(ClassListComboBox.getSelectedItem().toString());
+	                                          		if(fc != null) {
+	                                          			searchedClass = fc;
+		                                          		classNameField.setText(fc.getName());
+		                                          		trainersComboBox.setSelectedItem(fc.getInstructor());
+		                                          		maxClassSizeField.setText(fc.getMaxClassSize().toString());
+		                                          		classTimesField.setText(fc.getClassSchedule().toString());
+		                                          		String attendees = "";
+		                                          		for(Customer c: fc.getAttendees()) {
+		                                          			attendees += c.getPersonalInfo().getFirstName() + " " + c.getPersonalInfo().getLastName() + "\n";
+		                                          		}
+		                                          		classAttendeesField.setText(attendees);
+	                                          		}
+	                                          		else {
+	                                          			JOptionPane.showMessageDialog(mainMenuPanel, "Fitness Class does not exist in the system.");
+	                                          		}
+                              		}
+                              	}
+                              });
+                              ClassListComboBox.setBounds(142, 15, 157, 27);
+                              ClassListComboBox.addItem("");
+                              classesPanel.add(ClassListComboBox);
+                              
+                              JLabel startTimeClassLabel = new JLabel("Start Time:");
+                              startTimeClassLabel.setBounds(6, 165, 92, 16);
+                              classesPanel.add(startTimeClassLabel);
+                              
+                              JLabel endTimeClassLabel = new JLabel("End Time: ");
+                              endTimeClassLabel.setBounds(6, 193, 81, 16);
+                              classesPanel.add(endTimeClassLabel);
+                              
+                              JLabel weekdayClassLabel = new JLabel("Weekday:");
+                              weekdayClassLabel.setBounds(270, 165, 61, 16);
+                              classesPanel.add(weekdayClassLabel);
+                              
+                              classWeekday = new JComboBox();
+                              classWeekday.setModel(new DefaultComboBoxModel(Weekday.values()));
+                              classWeekday.setBounds(241, 189, 136, 27);
+                              classesPanel.add(classWeekday);
+                              
+                              classStartTextField = new JTextField();
+                              classStartTextField.setColumns(10);
+                              classStartTextField.setBounds(99, 160, 130, 26);
+                              classesPanel.add(classStartTextField);
+                              
+                              classEndField = new JTextField();
+                              classEndField.setColumns(10);
+                              classEndField.setBounds(99, 189, 130, 26);
+                              classesPanel.add(classEndField);
+                              
+                              classTimesField = new JTextArea();
+                              classTimesField.setWrapStyleWord(true);
+                              classTimesField.setLineWrap(true);
+                              classTimesField.setColumns(10);
+                              classTimesField.setBounds(90, 228, 276, 123);
+                              classesPanel.add(classTimesField);
+                              
+                              JButton btnAdd_Time = new JButton("Add");
+                              btnAdd_Time.addActionListener(new ActionListener() {
+                              	public void actionPerformed(ActionEvent e) {
+                              		WorkTime w =  GymSystemCreator.getInstance().createWorkTime(classStartTextField.getText(), classEndField.getText(), (Weekday) classWeekday.getSelectedItem());
+                              		if(searchedClass != null && searchedClass.getClassSchedule() != null) {
+                                    	classSchedule = searchedClass.getClassSchedule();
+                                    }
+                                    else {
+                                    	classSchedule = new Schedule();
+                                    }
+                                    
+                                    if(w != null)
+                                    {
+                                       classSchedule.addWorkTime(w);
+                                       classTimesField.setText(classSchedule.toString());
+                                       classTimesField.setText(classSchedule.toString());
+                                    } else {
+                                       JOptionPane.showMessageDialog(mainMenuPanel, "Work Time not valid.");
+                                    }
+                              	}
+                              });
+                              btnAdd_Time.setBounds(6, 256, 86, 29);
+                              classesPanel.add(btnAdd_Time);
+                              
+                              JButton btnRemove_Time = new JButton("Remove");
+                              btnRemove_Time.addActionListener(new ActionListener() {
+                              	public void actionPerformed(ActionEvent e) {
+                              		WorkTime w =  GymSystemCreator.getInstance().createWorkTime(classStartTextField.getText(), classEndField.getText(), (Weekday) classWeekday.getSelectedItem());
+                              		if(searchedClass.getClassSchedule() != null) {
+                                    	classSchedule = searchedClass.getClassSchedule();
+                                    }
+                                    if(w != null)
+                                    {
+                                       classSchedule.removeWorkTime(w);
+                                       classTimesField.setText(classSchedule.toString());
+                                    } else {
+                                       JOptionPane.showMessageDialog(mainMenuPanel, "Work Time not valid.");
+                                    }
+                              	}
+                              });
+                              btnRemove_Time.setBounds(6, 304, 86, 29);
+                              classesPanel.add(btnRemove_Time);
+                              
+                                    addEquipmentPanel = new JPanel();
+                                    addEquipmentPanel.setBounds(0, 53, 639, 391);
+                                    mainMenuPanel.add(addEquipmentPanel);
+                                    addEquipmentPanel.setLayout(null);
+                                    
+                                          JPanel searchEquipPanel_1 = new JPanel();
+                                          searchEquipPanel_1.setBounds(0, 55, 631, 71);
+                                          addEquipmentPanel.add(searchEquipPanel_1);
+                                          
+                                                JLabel lblEquipmentName = new JLabel("Equipment Name:");
+                                                lblEquipmentName.setBounds(252, 213, 117, 16);
+                                                addEquipmentPanel.add(lblEquipmentName);
+                                                
+                                                      JLabel lblQuantity = new JLabel("Quantity:");
+                                                      lblQuantity.setBounds(269, 253, 61, 16);
+                                                      addEquipmentPanel.add(lblQuantity);
+                                                      
+                                                            JLabel lblPathToPicture = new JLabel("Path to Picture:");
+                                                            lblPathToPicture.setBounds(269, 291, 100, 16);
+                                                            addEquipmentPanel.add(lblPathToPicture);
+                                                            
+                                                                  equipmentName = new JTextField();
+                                                                  equipmentName.setBounds(381, 208, 130, 26);
+                                                                  addEquipmentPanel.add(equipmentName);
+                                                                  equipmentName.setColumns(10);
+                                                                  allTextFields.add(equipmentName);
+                                                                  
+                                                                        equipmentQuantity = new JTextField();
+                                                                        equipmentQuantity.setBounds(381, 248, 130, 26);
+                                                                        addEquipmentPanel.add(equipmentQuantity);
+                                                                        equipmentQuantity.setColumns(10);
+                                                                        allTextFields.add(equipmentQuantity);
+                                                                        
+                                                                              eqPicturePath = new JTextField();
+                                                                              eqPicturePath.setBounds(381, 286, 130, 26);
+                                                                              addEquipmentPanel.add(eqPicturePath);
+                                                                              eqPicturePath.setColumns(10);
+                                                                              allTextFields.add(eqPicturePath);
+                                                                              
+                                                                                    JButton btnAdd = new JButton("Save");
+                                                                                    btnAdd.addActionListener(new ActionListener() {
+                                                                                       public void actionPerformed(ActionEvent e) {
+                                                                                          Equipment equipment = GymSystemCreator.getInstance().createEquipment(equipmentName.getText(), eqPicturePath.getText(), equipmentQuantity.getText());
+                                                                                       
+                                                                                          if(equipment != null)
+                                                                                          {
+                                                                                             Response success = new Response();
+                                                                                             if (action.equals("Add")) {
+                                                                                                success = GymSystemController.getInstance().addEquipment(equipment);
+                                                                                                
+                                                                                             } else {
+                                                                                                success = GymSystemController.getInstance().updateEquipment(equipmentSearched, equipment);
+                                                                                             }
+
+                                                                                             if (!success.successful) {
+                                                                                                JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+                                                                                                eInventoryComboBox.addItem(equipment);
+                                                                                             } else {
+                                                                                                JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+
+                                                                                                // clear fields
+                                                                                                clearTextFields();
+
+                                                                                                addEquipmentPanel.setVisible(false);
+                                                                                                searchEquipPanel_1.setVisible(false);
+
+                                                                                                if (currentUser.getUserType() == UserType.MANAGER) {
+                                                                                                   ManagerMenu.setVisible(true);
+                                                                                                } else {
+                                                                                                   TrainerMenu.setVisible(true);
+                                                                                                }
+                                                                                             }
+                                                                                          } else {
+                                                                                             JOptionPane.showMessageDialog(mainMenuPanel, "Equipment Information is not valid");
+                                                                                          }
+                                                                                       }
+                                                                                    });
+                                                                                    btnAdd.setBounds(252, 356, 117, 29);
+                                                                                    addEquipmentPanel.add(btnAdd);
+                                                                                    searchEquipPanel_1.setLayout(null);
+                                                                                    
+                                                                                          JLabel lblSearchForEquipment = new JLabel("Search for Equipment by Name:");
+                                                                                          lblSearchForEquipment.setBounds(101, 10, 197, 16);
+                                                                                          searchEquipPanel_1.add(lblSearchForEquipment);
+                                                                                          JComboBox searchEquip = new JComboBox();
+                                                                                          searchEquip.addActionListener(new ActionListener() {
+                                                                                          public void actionPerformed(ActionEvent e) {
+                                                                                          	if(!searchEquip.getSelectedItem().toString().equals("")) {
+                                                                                          	 Equipment equip = GymSystemController.getInstance().searchEquipment(searchEquip.getSelectedItem().toString());
+                                                                                               if (equip != null) {
+                                                                                                  equipmentSearched = equip;
+                                                                                                  equipmentName.setText(equip.getName());
+                                                                                                  String q = String.valueOf(equip.getQuantity());
+                                                                                                  equipmentQuantity.setText(q);
+                                                                                                  eqPicturePath.setText(equip.getPicture().getPath());
+                                                                                                  lblpicDisplay.setIcon(new ImageIcon(eqPicturePath.getText()));
+                                                                                               }
+                                                                                              }
+                                                                                          }
+                                                                                          });
+                                                                                          searchEquip.setEditable(true);
+                                                                                          searchEquip.setBounds(348, 5, 195, 27);
+                                                                                          searchEquip.addItem("");
+                                                                                          searchEquipPanel_1.add(searchEquip);
+                                                                                          
+                                                                                                JButton btnRemove = new JButton("Remove");
+                                                                                                btnRemove.addActionListener(new ActionListener() {
+                                                                                                   public void actionPerformed(ActionEvent e) {
+                                                                                                      Response success = GymSystemController.getInstance().removeEquipment(equipmentSearched);
+                                                                                                      if (!success.successful) {
+                                                                                                         JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+                                                                                                      } else {
+                                                                                                         JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+                                                                                                         // clear fields
+                                                                                                         clearTextFields();
+
+                                                                                                         customerSearched = null;
+                                                                                                         addEquipmentPanel.setVisible(false);
+                                                                                                         searchEquipPanel_1.setVisible(false);
+
+                                                                                                         if (currentUser.getUserType() == UserType.MANAGER) {
+                                                                                                            ManagerMenu.setVisible(true);
+                                                                                                         } else {
+                                                                                                            TrainerMenu.setVisible(true);
+                                                                                                         }
+                                                                                                      }
+                                                                                                   }
+                                                                                                });
+                                                                                                btnRemove.setBounds(394, 356, 117, 29);
+                                                                                                addEquipmentPanel.add(btnRemove);
+                                                                                                
+                                                                                                lblpicDisplay = new JLabel("");
+                                                                                                lblpicDisplay.setIcon(new ImageIcon(eqPicturePath.getText()));
+                                                                                                lblpicDisplay.setBounds(25, 213, 212, 149);
+                                                                                                addEquipmentPanel.add(lblpicDisplay);
+                              
+                              assignRoutinesPanel = new JPanel();
+                              assignRoutinesPanel.setBounds(0, 53, 639, 391);
+                              mainMenuPanel.add(assignRoutinesPanel);
+                              assignRoutinesPanel.setLayout(null);
+                              
+                                    JButton btnSaveWorkout = new JButton("Assign Workout To Customer");
+                                    btnSaveWorkout.setBounds(314, 186, 229, 29);
+                                    assignRoutinesPanel.add(btnSaveWorkout);
+                                    
+                                          txtListGymRoutines = new JTextArea();
+                                          txtListGymRoutines.setEditable(false);
+                                          txtListGymRoutines.setBounds(256, 244, 348, 141);
+                                          assignRoutinesPanel.add(txtListGymRoutines);
+                                          txtListGymRoutines.setLineWrap(true);
+                                          txtListGymRoutines.setWrapStyleWord(true);
+                                          txtListGymRoutines.setColumns(10);
+                                          String gymRoutines = "";
+                                          for(WorkoutRoutine wr: GymSystemController.getInstance().getRoutines()) {
+                                        	  gymRoutines += wr.toString();
+                                          }
+                                          txtListGymRoutines.setText(gymRoutines);
+                                          
+                                                JLabel lblSearchForCustomer = new JLabel("Search for Customer by Name:");
+                                                lblSearchForCustomer.setBounds(6, 6, 195, 16);
+                                                assignRoutinesPanel.add(lblSearchForCustomer);
+                                                
+                                                      txtDisplayCustomerInfo = new JTextArea();
+                                                      txtDisplayCustomerInfo.setEditable(false);
+                                                      txtDisplayCustomerInfo.setBounds(269, 33, 335, 105);
+                                                      assignRoutinesPanel.add(txtDisplayCustomerInfo);
+                                                      txtDisplayCustomerInfo.setLineWrap(true);
+                                                      txtDisplayCustomerInfo.setWrapStyleWord(true);
+                                                      txtDisplayCustomerInfo.setColumns(10);
+                                                      
+                                                            exSearchFName = new JTextField();
+                                                            exSearchFName.setBounds(96, 28, 130, 26);
+                                                            assignRoutinesPanel.add(exSearchFName);
+                                                            exSearchFName.setColumns(10);
+                                                            allTextFields.add(exSearchFName);
+                                                            
+                                                                  exSearchLName = new JTextField();
+                                                                  exSearchLName.setBounds(96, 64, 130, 26);
+                                                                  assignRoutinesPanel.add(exSearchLName);
+                                                                  exSearchLName.setColumns(10);
+                                                                  allTextFields.add(exSearchLName);
+                                                                  
+                                                                        JButton btnSearch_2 = new JButton("Search");
+                                                                        btnSearch_2.setBounds(41, 104, 117, 29);
+                                                                        assignRoutinesPanel.add(btnSearch_2);
+                                                                        
+                                                                              JButton btnRemoveWorkoutFrom = new JButton("Remove Workout From Customer");
+                                                                              btnRemoveWorkoutFrom.setBounds(303, 145, 240, 29);
+                                                                              assignRoutinesPanel.add(btnRemoveWorkoutFrom);
+                                                                              
+                                                                                    JLabel lblFirstName_1 = new JLabel("First Name:");
+                                                                                    lblFirstName_1.setBounds(6, 33, 73, 16);
+                                                                                    assignRoutinesPanel.add(lblFirstName_1);
+                                                                                    
+                                                                                          JLabel lblLastName_1 = new JLabel("Last Name:");
+                                                                                          lblLastName_1.setBounds(6, 69, 73, 16);
+                                                                                          assignRoutinesPanel.add(lblLastName_1);
+                                                                                          
+                                                                                          JLabel lblsearchedCustomer = new JLabel("Customer's Workout Routines");
+                                                                                          lblsearchedCustomer.setBounds(268, 6, 339, 16);
+                                                                                          assignRoutinesPanel.add(lblsearchedCustomer);
+                                                                                          
+                                                                                          JLabel lblGymsWorkoutRoutines = new JLabel("Gym's Workout Routines");
+                                                                                          lblGymsWorkoutRoutines.setBounds(256, 226, 174, 16);
+                                                                                          assignRoutinesPanel.add(lblGymsWorkoutRoutines);
+                                                                                          btnRemoveWorkoutFrom.addActionListener(new ActionListener() {
+                                                                                             public void actionPerformed(ActionEvent e) {
+                                                                                                if (!txtDisplayCustomerInfo.getSelectedText().equals("")) {
+                                                                                                   if (customerSearched == null) {
+                                                                                                      JOptionPane.showMessageDialog(mainMenuPanel, "Search Customer to Unassign Workout.");
+                                                                                                   } else {
+
+                                                                                                      Response success = GymSystemController.getInstance().unassignWorkoutRoutine(customerSearched, txtDisplayCustomerInfo.getSelectedText());
+
+                                                                                                      if (success.successful) {
+                                                                                                         JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+
+                                                                                                         String s = "";
+
+                                                                                                         for (WorkoutRoutine w : customerSearched.getWorkoutRoutines()) {
+                                                                                                            s += w.toString() + "\n";
+                                                                                                         }
+
+                                                                                                         txtDisplayCustomerInfo.setText(s);
+                                                                                                      } else {
+                                                                                                         JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+                                                                                                      }
+                                                                                                   }
+
+                                                                                                } else {
+                                                                                                   JOptionPane.showMessageDialog(mainMenuPanel, "Provide workout routine to remove.");
+                                                                                                }
+
+                                                                                             }
+                                                                                          });
+                                                                                          btnSearch_2.addActionListener(new ActionListener() {
+                                                                                             public void actionPerformed(ActionEvent e) {
+                                                                                                customerSearched = GymSystemController.getInstance().searchCustomer(exSearchFName.getText(),
+                                                                                                      exSearchLName.getText());
+                                                                                                if (customerSearched != null) {
+                                                                                                   String customerName = customerSearched.getPersonalInfo().getFirstName() + " "
+                                                                                                         + customerSearched.getPersonalInfo().getLastName() + "'s assigned Workout Routines:\n";
+                                                                                                   lblsearchedCustomer.setText(customerName);
+                                                                                                   String customerRoutines = "";
+                                                                                                   for (WorkoutRoutine w : customerSearched.getWorkoutRoutines()) {
+                                                                                                	   customerRoutines += w.toString() + "\n";
+                                                                                                   }
+
+                                                                                                   txtDisplayCustomerInfo.setText(customerRoutines);
+                                                                                                } else {
+                                                                                                   JOptionPane.showMessageDialog(mainMenuPanel, "Customer not found.");
+                                                                                                }
+
+                                                                                             }
+                                                                                          });
+                                                                                          btnSaveWorkout.addActionListener(new ActionListener() {
+                                                                                             public void actionPerformed(ActionEvent e) {
+                                                                                                if (customerSearched == null) {
+                                                                                                   JOptionPane.showMessageDialog(mainMenuPanel, "Search Customer to Assign Workout To.");
+                                                                                                } else {
+                                                                                                   WorkoutRoutine wr = GymSystemCreator.getInstance().createWorkoutRoutine(txtListGymRoutines.getSelectedText());
+                                                                                                   if(wr != null)
+                                                                                                   {
+                                                                                                      Response success = GymSystemController.getInstance().assignWorkoutRoutine(customerSearched, wr);
+                                                                                                      
+                                                                                                      if(success.successful) {
+                                                                                                         JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+                                                                                                         String s = "";
+
+                                                                                                         for (WorkoutRoutine w : customerSearched.getWorkoutRoutines()) {
+                                                                                                            s += w.toString() + "\n";
+                                                                                                         }
+
+                                                                                                         txtDisplayCustomerInfo.setText(s);
+                                                                                                      }
+                                                                                                      else
+                                                                                                      {
+                                                                                                         JOptionPane.showMessageDialog(mainMenuPanel, success.info);
+                                                                                                      }
+                                                                                                   }
+                                                                                                   else
+                                                                                                   {
+                                                                                                      JOptionPane.showMessageDialog(mainMenuPanel, "Workout Routine needs a name.");
+                                                                                                   }
+                                                                                                }
+                                                                                             }
+                                                                                          });
+                                                                                          assignRoutinesPanel.setVisible(false);
+                                                                                                      
+                                                                                                      /***MVSMITH***/
+                                                                                                      for(Equipment e : GymSystemController.getInstance().getEquipmentInventory()) {
+                                                                                                    	  eInventoryComboBox.addItem(e.getName());
+                                                                                                      }
+                                                                                                      for(WorkoutRoutine wr: GymSystemController.getInstance().getRoutines()) {
+                                                                                                    	  gymRoutinesCombobox.addItem(wr.toString());
+                                                                                                      }
+                                                                                                      if(GymSystemController.getInstance().getExercises()!= null) {
+	                                                                                                      for(Exercise e: GymSystemController.getInstance().getExercises()) {
+	                                                                                                    	  exercisesListComboBox.addItem(e);
+	                                                                                                      }
+                                                                                                      }
+                                                                                    /**MVSMITH view equipment inventory**/
+																					for(Equipment e : GymSystemController.getInstance().getEquipmentInventory()) {
+                                                                                    	searchEquip.addItem(e.getName());
+                                                                                    }
 
       JLabel lblMainMenu = new JLabel("Main Menu");
       lblMainMenu.setBounds(272, 20, 95, 21);
       lblMainMenu.setFont(new Font("Lucida Grande", Font.BOLD, 17));
       mainMenuPanel.add(lblMainMenu);
+      
+      JPanel createSchedulePanel = new JPanel();
+      createSchedulePanel.setBounds(0, 71, 637, 367);
+      mainMenuPanel.add(createSchedulePanel);
+      createSchedulePanel.setLayout(null);
 
       JButton btnLogout = new JButton("Logout");
       btnLogout.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
             // logout of system
             JOptionPane.showMessageDialog(mainMenuPanel, "Successfully logged out.");
+            LoginPanel.setVisible(true);
+            addEquipmentPanel.setVisible(false);
             addEmployeePanel.setVisible(false);
+            createWorkoutPanel.setVisible(false);
+            createSchedulePanel.setVisible(false);
+            mainMenuPanel.setVisible(false);
             ManagerMenu.setVisible(false);
             TrainerMenu.setVisible(false);
-            LoginPanel.setVisible(true);
+            assignRoutinesPanel.setVisible(false);
+            classesPanel.setVisible(false);
+            currUserClassesPanel.setVisible(false);
+            
+            
+            clearTextFields();
+
+            txtDisplayScheduleHere.setText("");
+            txtListGymRoutines.setText("");
+            txtDisplayCustomerInfo.setText("");
+            
             currentUser = null;
          }
       });
@@ -174,23 +1176,14 @@ public class GymSystemUI {
       addEmployeePanel.setLayout(null);
       addEmployeePanel.setVisible(false);
 
-      addEquipmentPanel = new JPanel();
-      addEquipmentPanel.setBounds(0, 53, 637, 385);
-      mainMenuPanel.add(addEquipmentPanel);
-      addEquipmentPanel.setLayout(null);
-
-      JPanel searchPanel = new JPanel();
+      searchPanel = new JPanel();
       searchPanel.setBounds(0, 6, 631, 82);
       addEmployeePanel.add(searchPanel);
 
-      JPanel loginInfoPanel = new JPanel();
+      loginInfoPanel = new JPanel();
       loginInfoPanel.setBounds(310, 230, 251, 99);
       addEmployeePanel.add(loginInfoPanel);
       loginInfoPanel.setLayout(null);
-
-      JPanel searchEquipPanel = new JPanel();
-      searchEquipPanel.setBounds(0, 55, 631, 71);
-      addEquipmentPanel.add(searchEquipPanel);
 
       JLabel lblLoginInformation = new JLabel("Login Information");
       lblLoginInformation.setFont(new Font("Lucida Grande", Font.ITALIC, 13));
@@ -463,10 +1456,7 @@ public class GymSystemUI {
       lblSearchLastName.setBounds(117, 58, 70, 16);
       searchPanel.add(lblSearchLastName);
 
-      JPanel createSchedulePanel = new JPanel();
-      createSchedulePanel.setBounds(0, 71, 637, 367);
-      mainMenuPanel.add(createSchedulePanel);
-      createSchedulePanel.setLayout(null);
+
 
       JButton btnAddWorkSchedule = new JButton("Work Schedule");
       btnAddWorkSchedule.addActionListener(new ActionListener() {
@@ -584,7 +1574,7 @@ public class GymSystemUI {
 
                customerSearched = null;
                addEmployeePanel.setVisible(false);
-               searchEquipPanel.setVisible(false);
+               searchEquipPanel_1.setVisible(false);
 
                if (currentUser.getUserType() == UserType.MANAGER) {
                   ManagerMenu.setVisible(true);
@@ -663,7 +1653,6 @@ public class GymSystemUI {
                t.setSchedule(createdSchedule);
 
                Response success = GymSystemController.getInstance().updateTrainer((Trainer) employeeSearched, t);
-
                if (success.successful) {
                   JOptionPane.showMessageDialog(mainMenuPanel, success.info);
                   employeeSearched = (Employee) t;
@@ -689,460 +1678,6 @@ public class GymSystemUI {
       lblWorkTime.setBounds(132, 17, 75, 16);
       createSchedulePanel.add(lblWorkTime);
 
-      JLabel lblEquipmentName = new JLabel("Equipment Name:");
-      lblEquipmentName.setBounds(176, 160, 117, 16);
-      addEquipmentPanel.add(lblEquipmentName);
-
-      JLabel lblQuantity = new JLabel("Quantity:");
-      lblQuantity.setBounds(232, 198, 61, 16);
-      addEquipmentPanel.add(lblQuantity);
-
-      JLabel lblPathToPicture = new JLabel("Path to Picture:");
-      lblPathToPicture.setBounds(196, 236, 100, 16);
-      addEquipmentPanel.add(lblPathToPicture);
-
-      equipmentName = new JTextField();
-      equipmentName.setBounds(305, 155, 130, 26);
-      addEquipmentPanel.add(equipmentName);
-      equipmentName.setColumns(10);
-      allTextFields.add(equipmentName);
-
-      equipmentQuantity = new JTextField();
-      equipmentQuantity.setBounds(305, 193, 130, 26);
-      addEquipmentPanel.add(equipmentQuantity);
-      equipmentQuantity.setColumns(10);
-      allTextFields.add(equipmentQuantity);
-
-      eqPicturePath = new JTextField();
-      eqPicturePath.setBounds(305, 231, 130, 26);
-      addEquipmentPanel.add(eqPicturePath);
-      eqPicturePath.setColumns(10);
-      allTextFields.add(eqPicturePath);
-
-      JButton btnAdd = new JButton("Save");
-      btnAdd.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            Equipment equipment = GymSystemCreator.getInstance().createEquipment(equipmentName.getText(), eqPicturePath.getText(), equipmentQuantity.getText());
-            if(equipment != null)
-            {
-               Response success = new Response();
-               if (action.equals("Add")) {
-                  success = GymSystemController.getInstance().addEquipment(equipment);
-               } else {
-                  success = GymSystemController.getInstance().updateEquipment(equipmentSearched, equipment);
-               }
-
-               if (!success.successful) {
-                  JOptionPane.showMessageDialog(mainMenuPanel, success.info);
-               } else {
-                  JOptionPane.showMessageDialog(mainMenuPanel, success.info);
-
-                  // clear fields
-                  clearTextFields();
-
-                  addEquipmentPanel.setVisible(false);
-                  searchEquipPanel.setVisible(false);
-
-                  if (currentUser.getUserType() == UserType.MANAGER) {
-                     ManagerMenu.setVisible(true);
-                  } else {
-                     TrainerMenu.setVisible(true);
-                  }
-               }
-            } else {
-               JOptionPane.showMessageDialog(mainMenuPanel, "Equipment Information is not valid");
-            }
-         }
-      });
-      btnAdd.setBounds(196, 288, 117, 29);
-      addEquipmentPanel.add(btnAdd);
-      searchEquipPanel.setLayout(null);
-
-      JLabel lblSearchForEquipment = new JLabel("Search for Equipment by Name:");
-      lblSearchForEquipment.setBounds(104, 11, 197, 16);
-      searchEquipPanel.add(lblSearchForEquipment);
-
-      searchEquipName = new JTextField();
-      searchEquipName.setBounds(306, 6, 130, 26);
-      searchEquipPanel.add(searchEquipName);
-      searchEquipName.setColumns(10);
-      allTextFields.add(searchEquipName);
-
-      JButton btnSearchEquip = new JButton("Search");
-      btnSearchEquip.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            Equipment equip = GymSystemController.getInstance().searchEquipment(searchEquipName.getText());
-            if (equip != null) {
-               equipmentSearched = equip;
-               equipmentName.setText(equip.getName());
-               String q = String.valueOf(equip.getQuantity());
-               equipmentQuantity.setText(q);
-               eqPicturePath.setText(equip.getPicture().getPath());
-            } else {
-               JOptionPane.showMessageDialog(mainMenuPanel, "Equipment is not found");
-            }
-         }
-      });
-      btnSearchEquip.setBounds(441, 5, 85, 29);
-      searchEquipPanel.add(btnSearchEquip);
-
-      JButton btnRemove = new JButton("Remove");
-      btnRemove.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            Response success = GymSystemController.getInstance().removeEquipment(equipmentSearched);
-            if (!success.successful) {
-               JOptionPane.showMessageDialog(mainMenuPanel, success.info);
-            } else {
-               JOptionPane.showMessageDialog(mainMenuPanel, success.info);
-               // clear fields
-               clearTextFields();
-
-               customerSearched = null;
-               addEquipmentPanel.setVisible(false);
-               searchEquipPanel.setVisible(false);
-
-               if (currentUser.getUserType() == UserType.MANAGER) {
-                  ManagerMenu.setVisible(true);
-               } else {
-                  TrainerMenu.setVisible(true);
-               }
-            }
-         }
-      });
-      btnRemove.setBounds(318, 288, 117, 29);
-      addEquipmentPanel.add(btnRemove);
-
-      createWorkoutPanel = new JPanel();
-      createWorkoutPanel.setBounds(0, 53, 639, 391);
-      mainMenuPanel.add(createWorkoutPanel);
-      createWorkoutPanel.setLayout(null);
-
-      JLabel lblExerciseName = new JLabel("Exercise Name:");
-      lblExerciseName.setBounds(6, 176, 96, 16);
-      createWorkoutPanel.add(lblExerciseName);
-
-      JLabel lblNumReps = new JLabel("Number of Repititions:");
-      lblNumReps.setBounds(6, 244, 169, 16);
-      createWorkoutPanel.add(lblNumReps);
-
-      JLabel lblNumSets = new JLabel("Number of Sets:");
-      lblNumSets.setBounds(6, 211, 149, 16);
-      createWorkoutPanel.add(lblNumSets);
-
-      exerciseName = new JTextField();
-      exerciseName.setBounds(175, 171, 130, 26);
-      exerciseName.setColumns(10);
-      createWorkoutPanel.add(exerciseName);
-      allTextFields.add(exerciseName);
-
-      numReps = new JTextField();
-      numReps.setBounds(175, 206, 130, 26);
-      numReps.setColumns(10);
-      createWorkoutPanel.add(numReps);
-      allTextFields.add(numReps);
-
-      numSets = new JTextField();
-      numSets.setBounds(175, 239, 130, 26);
-      numSets.setColumns(10);
-      createWorkoutPanel.add(numSets);
-      allTextFields.add(numSets);
-
-      workoutName = new JTextField();
-      workoutName.setBounds(175, 133, 130, 26);
-      createWorkoutPanel.add(workoutName);
-      workoutName.setColumns(10);
-      allTextFields.add(workoutName);
-
-      JTextField equipment = new JTextField();
-      equipment.setBounds(175, 272, 130, 27);
-      createWorkoutPanel.add(equipment);
-      allTextFields.add(equipment);
-
-      JButton btnSaveWorkout = new JButton("Assign Workout To Customer");
-      btnSaveWorkout.setBounds(353, 133, 210, 29);
-      btnSaveWorkout.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            if (customerSearched == null) {
-               JOptionPane.showMessageDialog(mainMenuPanel, "Search Customer to Assign Workout To.");
-            } else {
-               WorkoutRoutine wr = GymSystemCreator.getInstance().createWorkoutRoutine(workoutName.getText(), newExercises);
-               if(wr != null)
-               {
-                  Response success = GymSystemController.getInstance().assignWorkoutRoutine(customerSearched, wr);
-                  
-                  if(success.successful) {
-                     JOptionPane.showMessageDialog(mainMenuPanel, success.info);
-                     String s = customerSearched.getPersonalInfo().getFirstName() + " "
-                           + customerSearched.getPersonalInfo().getLastName() + "\n";
-
-                     for (WorkoutRoutine w : customerSearched.getWorkoutRoutines()) {
-                        s += w.toString() + "\n";
-                     }
-
-                     txtDisplayCustomerInfo.setText(s);
-                  }
-                  else
-                  {
-                     JOptionPane.showMessageDialog(mainMenuPanel, success.info);
-                  }
-               }
-               else
-               {
-                  JOptionPane.showMessageDialog(mainMenuPanel, "Workout Routine needs a name.");
-               }
-            }
-         }
-      });
-      createWorkoutPanel.add(btnSaveWorkout);
-
-      txtListExercisesHere = new JTextArea();
-      txtListExercisesHere.setBounds(317, 211, 299, 119);
-      txtListExercisesHere.setLineWrap(true);
-      txtListExercisesHere.setWrapStyleWord(true);
-      createWorkoutPanel.add(txtListExercisesHere);
-      txtListExercisesHere.setColumns(10);
-
-      JButton btnAddToWorkout = new JButton("Add to Workout Routine");
-      btnAddToWorkout.setBounds(58, 307, 195, 29);
-      btnAddToWorkout.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            Exercise ex = GymSystemCreator.getInstance().createExercise(exerciseName.getText(), numReps.getText(), numSets.getText(), equipment.getText());
-            if(ex != null)
-            {
-               newExercises.add(ex);
-            } else {
-               JOptionPane.showMessageDialog(mainMenuPanel, "Exercise information is not valid.");
-            }
-            
-            String s = "[" + workoutName.getText() + "]\n";
-            for (Exercise exer : newExercises) {
-               s += exer.toString() + "\n";
-            }
-
-            txtListExercisesHere.setText(s);
-         }
-      });
-      createWorkoutPanel.add(btnAddToWorkout);
-
-      JLabel lblWorkoutRoutineName = new JLabel("Workout Routine Name:");
-      lblWorkoutRoutineName.setBounds(6, 138, 149, 16);
-      createWorkoutPanel.add(lblWorkoutRoutineName);
-
-      JLabel lblSearchForCustomer = new JLabel("Search for Customer by Name:");
-      lblSearchForCustomer.setBounds(6, 6, 195, 16);
-      createWorkoutPanel.add(lblSearchForCustomer);
-
-      exSearchFName = new JTextField();
-      exSearchFName.setBounds(107, 30, 130, 26);
-      createWorkoutPanel.add(exSearchFName);
-      exSearchFName.setColumns(10);
-      allTextFields.add(exSearchFName);
-
-      exSearchLName = new JTextField();
-      exSearchLName.setBounds(107, 56, 130, 26);
-      createWorkoutPanel.add(exSearchLName);
-      exSearchLName.setColumns(10);
-      allTextFields.add(exSearchLName);
-
-      txtDisplayCustomerInfo = new JTextArea();
-      txtDisplayCustomerInfo.setBounds(277, 8, 335, 89);
-      txtDisplayCustomerInfo.setLineWrap(true);
-      txtDisplayCustomerInfo.setWrapStyleWord(true);
-      createWorkoutPanel.add(txtDisplayCustomerInfo);
-      txtDisplayCustomerInfo.setColumns(10);
-
-      JButton btnSearch_2 = new JButton("Search");
-      btnSearch_2.setBounds(58, 85, 117, 29);
-      btnSearch_2.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            customerSearched = GymSystemController.getInstance().searchCustomer(exSearchFName.getText(),
-                  exSearchLName.getText());
-            if (customerSearched != null) {
-               String s = customerSearched.getPersonalInfo().getFirstName() + " "
-                     + customerSearched.getPersonalInfo().getLastName() + "\n";
-
-               for (WorkoutRoutine w : customerSearched.getWorkoutRoutines()) {
-                  s += w.toString() + "\n";
-               }
-
-               txtDisplayCustomerInfo.setText(s);
-            } else {
-               JOptionPane.showMessageDialog(mainMenuPanel, "Customer not found.");
-            }
-
-         }
-      });
-      createWorkoutPanel.add(btnSearch_2);
-
-      JLabel lblFirstName_1 = new JLabel("First Name:");
-      lblFirstName_1.setBounds(26, 35, 73, 16);
-      createWorkoutPanel.add(lblFirstName_1);
-
-      JLabel lblLastName_1 = new JLabel("Last Name:");
-      lblLastName_1.setBounds(26, 61, 73, 16);
-      createWorkoutPanel.add(lblLastName_1);
-
-      JLabel lblEquipment = new JLabel("Equipment:");
-      lblEquipment.setBounds(6, 272, 149, 16);
-      createWorkoutPanel.add(lblEquipment);
-
-      JButton btnRemoveWorkoutFrom = new JButton("Remove Workout From Customer");
-      btnRemoveWorkoutFrom.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            if (!workoutName.getText().equals("")) {
-               if (customerSearched == null) {
-                  JOptionPane.showMessageDialog(mainMenuPanel, "Search Customer to Unassign Workout.");
-               } else {
-
-                  Response success = GymSystemController.getInstance().unassignWorkoutRoutine(customerSearched,
-                        workoutName.getText());
-
-                  if (success.successful) {
-                     JOptionPane.showMessageDialog(mainMenuPanel, success.info);
-
-                     String s = customerSearched.getPersonalInfo().getFirstName() + " "
-                           + customerSearched.getPersonalInfo().getLastName() + "\n";
-
-                     for (WorkoutRoutine w : customerSearched.getWorkoutRoutines()) {
-                        s += w.toString() + "\n";
-                     }
-
-                     txtDisplayCustomerInfo.setText(s);
-                  } else {
-                     JOptionPane.showMessageDialog(mainMenuPanel, success.info);
-                  }
-               }
-
-            } else {
-               JOptionPane.showMessageDialog(mainMenuPanel, "Provide workout routine to remove.");
-            }
-
-         }
-      });
-      btnRemoveWorkoutFrom.setBounds(341, 171, 240, 29);
-      createWorkoutPanel.add(btnRemoveWorkoutFrom);
-
-      JButton btnSave_1 = new JButton("Done");
-      btnSave_1.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            createWorkoutPanel.setVisible(false);
-            TrainerMenu.setVisible(true);
-            clearTextFields();
-            txtDisplayCustomerInfo.setText("");
-            txtListExercisesHere.setText("");
-         }
-      });
-      btnSave_1.setBounds(260, 335, 117, 29);
-      createWorkoutPanel.add(btnSave_1);
-
-      ManagerMenu = new JPanel();
-      mainMenuPanel.add(ManagerMenu, "name_49214182129467");
-      ManagerMenu.setBounds(0, 53, 637, 385);
-      ManagerMenu.setLayout(null);
-
-      JButton btnHireManager = new JButton("Hire Manager");
-      btnHireManager.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            newEmployeeType = UserType.MANAGER;
-            ManagerMenu.setVisible(false);
-            addEmployeePanel.setVisible(true);
-            createSchedulePanel.setVisible(false);
-            loginInfoPanel.setVisible(true);
-            searchPanel.setVisible(false);
-            btnRemoveUser.setVisible(false);
-            btnAddWorkSchedule.setVisible(false);
-            lblMembership.setVisible(false);
-            mstatus.setVisible(false);
-            btnAddWorkSchedule.setVisible(false);
-            action = "Add";
-         }
-      });
-      btnHireManager.setBounds(50, 17, 180, 72);
-      ManagerMenu.add(btnHireManager);
-
-      JButton btnHireTrainer = new JButton("Hire Trainer");
-      btnHireTrainer.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            newEmployeeType = UserType.TRAINER;
-            ManagerMenu.setVisible(false);
-            addEmployeePanel.setVisible(true);
-            createSchedulePanel.setVisible(false);
-            loginInfoPanel.setVisible(true);
-            searchPanel.setVisible(false);
-            btnRemoveUser.setVisible(false);
-            btnAddWorkSchedule.setVisible(true);
-            lblMembership.setVisible(false);
-            mstatus.setVisible(false);
-            btnAddWorkSchedule.setVisible(true);
-            action = "Add";
-         }
-      });
-      btnHireTrainer.setBounds(50, 101, 180, 72);
-      ManagerMenu.add(btnHireTrainer);
-
-      JButton btnRegisterCustomer_1 = new JButton("Register Customer");
-      btnRegisterCustomer_1.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            newEmployeeType = null;
-            ManagerMenu.setVisible(false);
-            addEmployeePanel.setVisible(true);
-            createSchedulePanel.setVisible(false);
-            loginInfoPanel.setVisible(false);
-            searchPanel.setVisible(false);
-            btnRemoveUser.setVisible(false);
-            btnAddWorkSchedule.setVisible(false);
-            lblMembership.setVisible(true);
-            mstatus.setVisible(true);
-            btnAddWorkSchedule.setVisible(false);
-            action = "Add";
-         }
-      });
-      btnRegisterCustomer_1.setBounds(50, 185, 180, 82);
-      ManagerMenu.add(btnRegisterCustomer_1);
-
-      JButton btnAddEquipmentIventory = new JButton("Add Equipment Iventory");
-      btnAddEquipmentIventory.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            ManagerMenu.setVisible(false);
-            addEquipmentPanel.setVisible(true);
-            searchEquipPanel.setVisible(false);
-            btnRemove.setVisible(false);
-            action = "Add";
-         }
-      });
-      btnAddEquipmentIventory.setBounds(356, 107, 180, 66);
-      ManagerMenu.add(btnAddEquipmentIventory);
-
-      JButton btnModifyUserInformation = new JButton("Modify User Information");
-      btnModifyUserInformation.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            ManagerMenu.setVisible(false);
-            addEmployeePanel.setVisible(true);
-            loginInfoPanel.setVisible(true);
-            searchPanel.setVisible(true);
-            btnRemoveUser.setVisible(true);
-            btnAddWorkSchedule.setVisible(false);
-            lblMembership.setVisible(false);
-            mstatus.setVisible(false);
-            action = "Update";
-         }
-      });
-      btnModifyUserInformation.setBounds(356, 20, 180, 66);
-      ManagerMenu.add(btnModifyUserInformation);
-
-      JButton btnModifyEquipment = new JButton("Modify Equipment");
-      btnModifyEquipment.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            ManagerMenu.setVisible(false);
-            searchEquipPanel.setVisible(true);
-            addEquipmentPanel.setVisible(true);
-            btnRemove.setVisible(true);
-            action = "Update";
-         }
-      });
-      btnModifyEquipment.setBounds(356, 196, 180, 60);
-      ManagerMenu.add(btnModifyEquipment);
-
       JButton btnReturn = new JButton("Return");
       btnReturn.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
@@ -1152,103 +1687,251 @@ public class GymSystemUI {
                addEmployeePanel.setVisible(false);
                createWorkoutPanel.setVisible(false);
                createSchedulePanel.setVisible(false);
+               classesPanel.setVisible(false);
+               currUserClassesPanel.setVisible(false);
+               assignRoutinesPanel.setVisible(false);
+               
                mainMenuPanel.setVisible(true);
                ManagerMenu.setVisible(true);
                
+               
             } else {
-               LoginPanel.setVisible(false);
-               addEquipmentPanel.setVisible(false);
-               addEmployeePanel.setVisible(false);
-               createWorkoutPanel.setVisible(false);
-               createSchedulePanel.setVisible(false);
-               mainMenuPanel.setVisible(true);              
-               TrainerMenu.setVisible(true);
+            	lblsearchedCustomer.setText("Customer's Workout Routines");
+            	assignRoutinesPanel.setVisible(false);
+            	classesPanel.setVisible(false);
+            	currUserClassesPanel.setVisible(false);
+			   LoginPanel.setVisible(false);
+			   addEquipmentPanel.setVisible(false);
+			   addEmployeePanel.setVisible(false);
+			   createWorkoutPanel.setVisible(false);
+			   createSchedulePanel.setVisible(false);
+			   mainMenuPanel.setVisible(true);              
+			   TrainerMenu.setVisible(true);
             }
             clearTextFields();
+
+            txtDisplayScheduleHere.setText("");
+            txtListGymRoutines.setText("");
+            txtDisplayCustomerInfo.setText("");
          }
       });
-
-      TrainerMenu = new JPanel();
-      mainMenuPanel.add(TrainerMenu, "name_49214182129467");
-      TrainerMenu.setBounds(0, 53, 637, 385);
-      TrainerMenu.setLayout(null);
-
-      JButton btnCreateWorkout = new JButton("Workout Routines");
-      btnCreateWorkout.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            TrainerMenu.setVisible(false);
-            createWorkoutPanel.setVisible(true);
-         }
-      });
-      btnCreateWorkout.setBounds(72, 242, 203, 92);
-      TrainerMenu.add(btnCreateWorkout);
-
-      JButton btnRegisterCustomer = new JButton("Register Customer");
-      btnRegisterCustomer.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            newEmployeeType = null;
-            TrainerMenu.setVisible(false);
-            addEmployeePanel.setVisible(true);
-            loginInfoPanel.setVisible(false);
-            searchPanel.setVisible(false);
-            btnRemoveUser.setVisible(false);
-            btnAddWorkSchedule.setVisible(false);
-            lblMembership.setVisible(true);
-            mstatus.setVisible(true);
-            btnAddWorkSchedule.setVisible(false);
-            action = "Add";
-         }
-      });
-      btnRegisterCustomer.setBounds(72, 18, 203, 104);
-      TrainerMenu.add(btnRegisterCustomer);
-
-      JButton btnAddEquipmentInventory = new JButton("Add Equipment Inventory");
-      btnAddEquipmentInventory.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            TrainerMenu.setVisible(false);
-            addEquipmentPanel.setVisible(true);
-            searchEquipPanel.setVisible(false);
-            btnRemove.setVisible(false);
-            action = "Add";
-         }
-      });
-      btnAddEquipmentInventory.setBounds(72, 134, 203, 85);
-      TrainerMenu.add(btnAddEquipmentInventory);
-
-      JButton btnModifyCustomerInformation = new JButton("Modify Customer Information");
-      btnModifyCustomerInformation.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            newEmployeeType = UserType.MANAGER;
-            TrainerMenu.setVisible(false);
-            addEmployeePanel.setVisible(true);
-            loginInfoPanel.setVisible(false);
-            searchPanel.setVisible(true);
-            btnAddWorkSchedule.setVisible(false);
-            lblMembership.setVisible(true);
-            mstatus.setVisible(true);
-            action = "Update";
-         }
-      });
-      btnModifyCustomerInformation.setBounds(344, 18, 210, 97);
-      TrainerMenu.add(btnModifyCustomerInformation);
-
-      JButton btnModifyEquipment_1 = new JButton("Modify Equipment");
-      btnModifyEquipment_1.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            TrainerMenu.setVisible(false);
-            searchEquipPanel.setVisible(true);
-            addEquipmentPanel.setVisible(true);
-            btnRemove.setVisible(true);
-            action = "Update";
-         }
-      });
-      btnModifyEquipment_1.setBounds(344, 138, 210, 77);
-      TrainerMenu.add(btnModifyEquipment_1);
-      TrainerMenu.setVisible(false);
       btnReturn.setBackground(Color.LIGHT_GRAY);
       btnReturn.setBounds(0, 2, 117, 29);
       mainMenuPanel.add(btnReturn);
-      ManagerMenu.setVisible(false);
+            
+                  ManagerMenu = new JPanel();
+                  mainMenuPanel.add(ManagerMenu, "name_49214182129467");
+                  ManagerMenu.setBounds(0, 53, 637, 385);
+                  ManagerMenu.setLayout(null);
+                  
+                        JButton btnHireManager = new JButton("Hire Manager");
+                        btnHireManager.addActionListener(new ActionListener() {
+                           public void actionPerformed(ActionEvent e) {
+                              newEmployeeType = UserType.MANAGER;
+                              ManagerMenu.setVisible(false);
+                              addEmployeePanel.setVisible(true);
+                              createSchedulePanel.setVisible(false);
+                              loginInfoPanel.setVisible(true);
+                              searchPanel.setVisible(false);
+                              btnRemoveUser.setVisible(false);
+                              btnAddWorkSchedule.setVisible(false);
+                              lblMembership.setVisible(false);
+                              mstatus.setVisible(false);
+                              btnAddWorkSchedule.setVisible(false);
+                              action = "Add";
+                           }
+                        });
+                        btnHireManager.setBounds(50, 17, 180, 72);
+                        ManagerMenu.add(btnHireManager);
+                        
+                              JButton btnHireTrainer = new JButton("Hire Trainer");
+                              btnHireTrainer.addActionListener(new ActionListener() {
+                                 public void actionPerformed(ActionEvent e) {
+                                    newEmployeeType = UserType.TRAINER;
+                                    ManagerMenu.setVisible(false);
+                                    addEmployeePanel.setVisible(true);
+                                    createSchedulePanel.setVisible(false);
+                                    loginInfoPanel.setVisible(true);
+                                    searchPanel.setVisible(false);
+                                    btnRemoveUser.setVisible(false);
+                                    btnAddWorkSchedule.setVisible(true);
+                                    lblMembership.setVisible(false);
+                                    mstatus.setVisible(false);
+                                    btnAddWorkSchedule.setVisible(true);
+                                    action = "Add";
+                                 }
+                              });
+                              btnHireTrainer.setBounds(50, 101, 180, 72);
+                              ManagerMenu.add(btnHireTrainer);
+                              
+                                    JButton btnRegisterCustomer_1 = new JButton("Register Customer");
+                                    btnRegisterCustomer_1.addActionListener(new ActionListener() {
+                                       public void actionPerformed(ActionEvent e) {
+                                          newEmployeeType = null;
+                                          ManagerMenu.setVisible(false);
+                                          addEmployeePanel.setVisible(true);
+                                          createSchedulePanel.setVisible(false);
+                                          loginInfoPanel.setVisible(false);
+                                          searchPanel.setVisible(false);
+                                          btnRemoveUser.setVisible(false);
+                                          btnAddWorkSchedule.setVisible(false);
+                                          lblMembership.setVisible(true);
+                                          mstatus.setVisible(true);
+                                          btnAddWorkSchedule.setVisible(false);
+                                          action = "Add";
+                                       }
+                                    });
+                                    btnRegisterCustomer_1.setBounds(50, 185, 180, 82);
+                                    ManagerMenu.add(btnRegisterCustomer_1);
+                                    
+                                          JButton btnAddEquipmentIventory = new JButton("Add Equipment Iventory");
+                                          btnAddEquipmentIventory.addActionListener(new ActionListener() {
+                                             public void actionPerformed(ActionEvent e) {
+                                                ManagerMenu.setVisible(false);
+                                                addEquipmentPanel.setVisible(true);
+                                                searchEquipPanel_1.setVisible(false);
+                                                btnRemove.setVisible(false);
+                                                action = "Add";
+                                             }
+                                          });
+                                          btnAddEquipmentIventory.setBounds(356, 107, 180, 66);
+                                          ManagerMenu.add(btnAddEquipmentIventory);
+                                          
+                                                JButton btnModifyUserInformation = new JButton("Modify User Information");
+                                                btnModifyUserInformation.addActionListener(new ActionListener() {
+                                                   public void actionPerformed(ActionEvent e) {
+                                                      ManagerMenu.setVisible(false);
+                                                      addEmployeePanel.setVisible(true);
+                                                      loginInfoPanel.setVisible(true);
+                                                      searchPanel.setVisible(true);
+                                                      btnRemoveUser.setVisible(true);
+                                                      btnAddWorkSchedule.setVisible(false);
+                                                      lblMembership.setVisible(false);
+                                                      mstatus.setVisible(false);
+                                                      action = "Update";
+                                                   }
+                                                });
+                                                btnModifyUserInformation.setBounds(356, 20, 180, 66);
+                                                ManagerMenu.add(btnModifyUserInformation);
+                                                
+                                                      JButton btnModifyEquipment = new JButton("Modify Equipment");
+                                                      btnModifyEquipment.addActionListener(new ActionListener() {
+                                                         public void actionPerformed(ActionEvent e) {
+                                                            ManagerMenu.setVisible(false);
+                                                            searchEquipPanel_1.setVisible(true);
+                                                            addEquipmentPanel.setVisible(true);
+                                                            btnRemove.setVisible(true);
+                                                            action = "Update";
+                                                         }
+                                                      });
+                                                      btnModifyEquipment.setBounds(356, 196, 180, 71);
+                                                      ManagerMenu.add(btnModifyEquipment);
+                                                      
+                                                      JButton manageClassbtn = new JButton("Manage Classes");
+                                                      manageClassbtn.addActionListener(new ActionListener() {
+                                                      	public void actionPerformed(ActionEvent e) {
+                                                      		ManagerMenu.setVisible(false);
+                                                            addEmployeePanel.setVisible(false);
+                                                            loginInfoPanel.setVisible(false);
+                                                            searchPanel.setVisible(false);
+                                                            btnRemoveUser.setVisible(false);
+                                                            btnAddWorkSchedule.setVisible(false);
+                                                            lblMembership.setVisible(false);
+                                                            mstatus.setVisible(false); 
+                                                            classesPanel.setVisible(true);
+                                                      	}
+                                                      });
+                                                      manageClassbtn.setBounds(50, 279, 180, 82);
+                                                      ManagerMenu.add(manageClassbtn);
+                                                      ManagerMenu.setVisible(false);
+      
+            TrainerMenu = new JPanel();
+            mainMenuPanel.add(TrainerMenu, "name_49214182129467");
+            TrainerMenu.setBounds(0, 53, 637, 385);
+            TrainerMenu.setLayout(null);
+            
+                  JButton btnCreateWorkout = new JButton("Workout Routines");
+                  btnCreateWorkout.addActionListener(new ActionListener() {
+                     public void actionPerformed(ActionEvent e) {
+                        TrainerMenu.setVisible(false);
+                        createWorkoutPanel.setVisible(true);
+                     }
+                  });
+                  btnCreateWorkout.setBounds(72, 227, 203, 77);
+                  TrainerMenu.add(btnCreateWorkout);
+                  
+                        JButton btnRegisterCustomer = new JButton("Register Customer");
+                        btnRegisterCustomer.addActionListener(new ActionListener() {
+                           public void actionPerformed(ActionEvent e) {
+                              newEmployeeType = null;
+                              TrainerMenu.setVisible(false);
+                              addEmployeePanel.setVisible(true);
+                              loginInfoPanel.setVisible(false);
+                              searchPanel.setVisible(false);
+                              btnRemoveUser.setVisible(false);
+                              btnAddWorkSchedule.setVisible(false);
+                              lblMembership.setVisible(true);
+                              mstatus.setVisible(true);
+                              btnAddWorkSchedule.setVisible(false);
+                              action = "Add";
+                           }
+                        });
+                        btnRegisterCustomer.setBounds(72, 18, 203, 85);
+                        TrainerMenu.add(btnRegisterCustomer);
+                        
+                              JButton btnAddEquipmentInventory = new JButton("Add Equipment Inventory");
+                              btnAddEquipmentInventory.addActionListener(new ActionListener() {
+                                 public void actionPerformed(ActionEvent e) {
+                                    TrainerMenu.setVisible(false);
+                                    addEquipmentPanel.setVisible(true);
+                                    searchEquipPanel_1.setVisible(false);
+                                    btnRemove.setVisible(false);
+                                    action = "Add";
+                                 }
+                              });
+                              btnAddEquipmentInventory.setBounds(72, 123, 203, 77);
+                              TrainerMenu.add(btnAddEquipmentInventory);
+                              
+                                    JButton btnModifyCustomerInformation = new JButton("Modify Customer Information");
+                                    btnModifyCustomerInformation.addActionListener(new ActionListener() {
+                                       public void actionPerformed(ActionEvent e) {
+                                          newEmployeeType = UserType.MANAGER;
+                                          TrainerMenu.setVisible(false);
+                                          addEmployeePanel.setVisible(true);
+                                          loginInfoPanel.setVisible(false);
+                                          searchPanel.setVisible(true);
+                                          btnAddWorkSchedule.setVisible(false);
+                                          lblMembership.setVisible(true);
+                                          mstatus.setVisible(true);
+                                          action = "Update";
+                                       }
+                                    });
+                                    btnModifyCustomerInformation.setBounds(344, 18, 210, 85);
+                                    TrainerMenu.add(btnModifyCustomerInformation);
+                                    
+                                          JButton btnModifyEquipment_1 = new JButton("Modify Equipment");
+                                          btnModifyEquipment_1.addActionListener(new ActionListener() {
+                                             public void actionPerformed(ActionEvent e) {
+                                                TrainerMenu.setVisible(false);
+                                                searchEquipPanel_1.setVisible(true);
+                                                addEquipmentPanel.setVisible(true);
+                                                btnRemove.setVisible(true);
+                                                action = "Update";
+                                             }
+                                          });
+                                          btnModifyEquipment_1.setBounds(344, 123, 210, 77);
+                                          TrainerMenu.add(btnModifyEquipment_1);
+                                          
+                                          JButton btnViewClasses = new JButton("View Classes");
+                                          btnViewClasses.addActionListener(new ActionListener() {
+                                          	public void actionPerformed(ActionEvent e) {
+                                          		TrainerMenu.setVisible(false);
+                                          		currUserClassesPanel.setVisible(true);
+                                          	}
+                                          });
+                                          btnViewClasses.setBounds(344, 227, 210, 77);
+                                          TrainerMenu.add(btnViewClasses);
+                                          TrainerMenu.setVisible(false);
 
       JButton btnLogin = new JButton("Login");
       btnLogin.addActionListener(new ActionListener() {
@@ -1265,15 +1948,19 @@ public class GymSystemUI {
                   addEquipmentPanel.setVisible(false);
                   addEmployeePanel.setVisible(false);
                   createWorkoutPanel.setVisible(false);
+                  classesPanel.setVisible(false);
+                  currUserClassesPanel.setVisible(false);
                   createSchedulePanel.setVisible(false);
                   mainMenuPanel.setVisible(true);
                   ManagerMenu.setVisible(true);
                } else {
                   LoginPanel.setVisible(false);
+                  classesPanel.setVisible(false);
                   createSchedulePanel.setVisible(false);
                   addEquipmentPanel.setVisible(false);
                   addEmployeePanel.setVisible(false);
                   createWorkoutPanel.setVisible(false);
+                  currUserClassesPanel.setVisible(false);
                   mainMenuPanel.setVisible(true);
                   TrainerMenu.setVisible(true);
                }

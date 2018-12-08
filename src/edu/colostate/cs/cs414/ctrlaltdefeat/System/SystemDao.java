@@ -1,10 +1,13 @@
 package edu.colostate.cs.cs414.ctrlaltdefeat.System;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Equipment;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Exercise;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.FitnessClass;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.WorkoutRoutine;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Customer;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Employee;
@@ -13,6 +16,7 @@ import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Trainer;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.User;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.MembershipStatus;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.PersonalInformation;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Schedule;
 
 public class SystemDao {
    
@@ -20,16 +24,21 @@ public class SystemDao {
    Set<Trainer> trainers;
    Set<Customer> customers;
    Set<Equipment> equipmentInventory;
+   Set<WorkoutRoutine> gymRoutines;
+   Set<Exercise> gymExercises;
+   Set<FitnessClass> fitnessClasses;
    
    private static final SystemDao instance = new SystemDao();
 
    private SystemDao(){
-      managers = new HashSet<Manager>();
-      trainers = new HashSet<Trainer>();
-      customers = new HashSet<Customer>();
-      equipmentInventory = new HashSet<Equipment>();            
+	  this.gymExercises = new HashSet<Exercise>();
+	  this.managers = new HashSet<Manager>();
+      this.trainers = new HashSet<Trainer>();
+      this.customers = new HashSet<Customer>();
+      this.equipmentInventory = new HashSet<Equipment>(); 
+      this.gymRoutines = new HashSet<WorkoutRoutine>();
+      this.fitnessClasses = new HashSet<FitnessClass>();
    }
-   
    public static SystemDao getInstance(){
       return instance;
    }
@@ -44,6 +53,7 @@ public class SystemDao {
       }
       return true;
    }
+   
    
    public boolean updateManager(Manager manager, PersonalInformation pi, User password)
    {
@@ -308,4 +318,164 @@ public class SystemDao {
       }
       return null;
    }
+   public WorkoutRoutine searchRoutines(String name)
+   {
+      for(WorkoutRoutine e: this.gymRoutines)
+      {
+         if(e.getName().toLowerCase().equals(name.toLowerCase())) {
+            return e;
+         }
+      }
+      return null;
+   }
+   /**MVSMITH EXERCISES***/
+   public Set<Exercise> getGymExercises() {
+	   return this.gymExercises;
+   }
+   public boolean addExercise(Exercise exercise) {
+	   try {
+		  this.gymExercises.add(exercise); 
+	    }
+	    catch(Exception e) {
+	        return false;
+	    }
+	    return true;
+   }
+   public boolean removeExercise(Exercise ex) {
+	   try {
+		   this.gymExercises.remove(ex);     
+	   }
+	   catch(Exception e) {
+		   return false;
+	   }
+	   return true;
+   }
+   public Exercise searchExercise(String name)
+   {
+      for(Exercise e: this.gymExercises)
+      {
+         if(e.getName().toLowerCase().equals(name.toLowerCase())) {
+            return e;
+         }
+      }
+      return null;
+   }
+   /**MVSMITH return equipment inventory**/
+   public Set<Equipment> equipmentInventory()
+   {
+      return this.equipmentInventory;
+   }
+   public Set<WorkoutRoutine> getGymRoutines() {
+	   return this.gymRoutines;
+   }
+   public boolean deleteRoutine(WorkoutRoutine wr){
+      try {
+         this.gymRoutines.remove(wr);     
+      }
+      catch(Exception e) {
+         return false;
+      }
+      return true;
+   }
+   public boolean addRoutines(WorkoutRoutine wr){
+      try {
+         this.gymRoutines.add(wr);     
+      }
+      catch(Exception e) {
+         return false;
+      }
+      return true;
+      
+   }
+   public WorkoutRoutine getRoutine(WorkoutRoutine wr){
+      for(WorkoutRoutine r: this.gymRoutines)
+      {
+         if(r.equals(wr))
+         {
+            return r;
+         }
+      }
+      return null;
+   }
+	   
+   public boolean updateRoutine(WorkoutRoutine wr, String name, Set<Exercise> exercises){
+      try {
+    	  WorkoutRoutine update = this.getRoutine(wr);
+         if(update != null)
+         {
+            update.setName(name);
+            update.setExercises((ArrayList<Exercise>) exercises);
+            return true;
+         }
+         else {
+            return false;
+         }
+            
+      }
+      catch(Exception e) {
+         return false;
+      }
+   }
+   /**Fitness Classes***/
+   public boolean addFitnessClass(FitnessClass fitnessClass)
+   {
+      try {
+         this.fitnessClasses.add(fitnessClass);     
+      }
+      catch(Exception e) {
+         return false;
+      }
+      return true;
+   }
+   public boolean updateFitnessClass(FitnessClass fc, String name, Trainer t, Schedule s, Integer max){
+      try {
+    	  FitnessClass update = this.getFitnessClass(fc);
+         if(update != null)
+         {
+            update.setName(name);
+            return true;
+         }
+         else {
+            return false;
+         }
+            
+      }
+      catch(Exception e) {
+         return false;
+      }
+   }
+   public boolean removeFitnessClass(FitnessClass fitnessClass)
+   {
+      try {
+         this.fitnessClasses.remove(fitnessClass);     
+      }
+      catch(Exception e) {
+         return false;
+      }
+      return true;
+   }
+   public FitnessClass getFitnessClass(FitnessClass fc){
+      for(FitnessClass c: this.fitnessClasses)
+      {
+         if(c.equals(fc))
+         {
+            return c;
+         }
+      }
+      return null;
+   }
+   public FitnessClass searchFitnessClasses(String name)
+   {
+      for(FitnessClass fc: this.fitnessClasses)
+      {
+         if(fc.getName().toLowerCase().equals(name.toLowerCase())) {
+            return fc;
+         }
+      }
+      return null;
+   }
+   public Set<FitnessClass> getGymClasses() {
+	   return this.fitnessClasses;
+   }
+   
 }

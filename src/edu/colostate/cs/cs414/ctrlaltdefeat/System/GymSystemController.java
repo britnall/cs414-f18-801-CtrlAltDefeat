@@ -2,6 +2,7 @@ package edu.colostate.cs.cs414.ctrlaltdefeat.System;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -10,6 +11,8 @@ import com.thoughtworks.xstream.persistence.PersistenceStrategy;
 import com.thoughtworks.xstream.persistence.XmlArrayList;
 
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Equipment;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Exercise;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.FitnessClass;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.WorkoutRoutine;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Customer;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Employee;
@@ -28,21 +31,26 @@ public class GymSystemController {
       String path = Paths.get(".").toAbsolutePath().normalize().toString();
       PersistenceStrategy strategy = new FilePersistenceStrategy(new File(path));
       list = new XmlArrayList(strategy);
-      
       if (list.isEmpty())
       {
+    	 //list.remove(0);
          dao = SystemDao.getInstance();
          
-         // Add default user
+         // Add default user Manager
          User ui = new User("user", "password");
          Manager default_m = new Manager(ui, null);
          dao.addManager(default_m);
+         // Add default user Trainer
+         User ui2 = new User("tester", "password");
+         Manager default_t = new Manager(ui, null);
+         dao.addManager(default_t);
          
          list.add(dao);
       }
       else
       {
          dao = (SystemDao) list.get(0);
+         
       }
    }
    
@@ -59,6 +67,14 @@ public class GymSystemController {
    {
       User login = new User(username, password);
       
+      for(Trainer t: getTrainers())
+      {
+         if(t.getUserInfo().equals(login))
+         {
+            return t;
+         }
+      }
+      
       for(Manager m: getManagers())
       {
          if(m.getUserInfo().equals(login))
@@ -67,13 +83,6 @@ public class GymSystemController {
          }
       }
       
-      for(Trainer t: getTrainers())
-      {
-         if(t.getUserInfo().equals(login))
-         {
-            return t;
-         }
-      }
       
       return null;
    }
@@ -119,6 +128,32 @@ public class GymSystemController {
       
       return response;
    }
+   /**MVSMITH**11-20*/
+   public Response addRoutine(WorkoutRoutine routine){
+	      
+	      Response response = new Response();
+	      response.info = "Failed to add equipment.";
+	      
+	      if(dao.addRoutines(routine)){
+	         response.successful = true;
+	         response.info = "Equipment added successfully!";
+	         storeData();
+	      }
+	      
+	      return response;
+	      
+   }
+   public Response addExercise(Exercise exercise){
+	      
+	      Response response = new Response();
+	      response.info = "Failed to add Exercise.";
+	      if(dao.addExercise(exercise)){
+	         response.successful = true;
+	         response.info = "Exercise added successfully!";
+	         storeData();
+	      }
+	      return response;
+	}
    
    public Response addEquipment(Equipment equipment){
       
@@ -133,6 +168,20 @@ public class GymSystemController {
       
       return response;
       
+   }
+   public Response addGymClass(FitnessClass fc){
+	      
+	      Response response = new Response();
+	      response.info = "Failed to add Gym Class.";
+	      
+	      if(dao.addFitnessClass(fc)){
+	         response.successful = true;
+	         response.info = "Gym Class added successfully!";
+	         storeData();
+	      }
+	      
+	      return response;
+	      
    }
    public Response removeManager(Manager manager){
       
@@ -190,6 +239,41 @@ public class GymSystemController {
       return response;
       
    }
+
+   public Response removeRoutine(WorkoutRoutine routine){
+	      Response response = new Response();
+	      response.info = "Failed to remove Exercise.";
+	      if(dao.deleteRoutine(routine)){
+	         response.successful = true;
+	         response.info = "Exercise removed successfully!";
+	         storeData();
+	      }
+	      return response;
+	}
+   public Response removeExercise(Exercise exercise){
+	      Response response = new Response();
+	      response.info = "Failed to remove Exercise.";
+	      if(dao.removeExercise(exercise)){
+	         response.successful = true;
+	         response.info = "Exercise removed successfully!";
+	         storeData();
+	      }
+	      return response;
+	}
+   public Response removeGymClass(FitnessClass fc){
+	      
+	      Response response = new Response();
+	      response.info = "Failed to remove Gym Class.";
+	      
+	      if(dao.removeFitnessClass(fc)){
+	         response.successful = true;
+	         response.info = "Gym Class removed successfully!";
+	         storeData();
+	      }
+	      
+	      return response;
+	      
+   	}	
    
    public Response updateManager(Manager old, Manager update)
    {
@@ -300,6 +384,24 @@ public class GymSystemController {
    {
       return dao.searchEquipment(name);
    }
+   public Exercise searchExercise(String name)
+   {
+      return dao.searchExercise(name);
+   }
+   public WorkoutRoutine searchRoutines(String name)
+   {
+      return dao.searchRoutines(name);
+   }
+   public FitnessClass searchGymClasses(String name)
+   {
+      return dao.searchFitnessClasses(name);
+   }
+  
+   /**MVSMITH return equipment inventory**/
+   public Set<Equipment> getEquipmentInventory()
+   {
+      return dao.equipmentInventory;
+   }
 
    public Set<Manager> getManagers(){ 
       return dao.getManagers();
@@ -316,5 +418,14 @@ public class GymSystemController {
    public Set<Equipment> getEquipment(){      
       return dao.getEquipmentInventory();
    }
+   public Set<Exercise> getExercises(){      
+	    return dao.getGymExercises();
+   }
+   public Set<WorkoutRoutine> getRoutines(){      
+	    return dao.getGymRoutines();
+  }
+   public Set<FitnessClass> getGymClasses(){      
+	    return dao.getGymClasses();
+ }
    
 }
