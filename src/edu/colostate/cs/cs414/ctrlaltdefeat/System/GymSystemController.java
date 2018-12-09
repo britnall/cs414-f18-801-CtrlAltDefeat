@@ -12,6 +12,7 @@ import com.thoughtworks.xstream.persistence.XmlArrayList;
 
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Equipment;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Exercise;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.FitnessClass;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.WorkoutRoutine;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Customer;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Employee;
@@ -40,7 +41,6 @@ public class GymSystemController {
       String path = Paths.get(".").toAbsolutePath().normalize().toString();
       PersistenceStrategy strategy = new FilePersistenceStrategy(new File(path));
       list = new XmlArrayList(strategy);
-           
       if (list.isEmpty()) // Setup Gym System if it isn't already serialized
       {
          dao = SystemDao.getInstance();
@@ -54,7 +54,7 @@ public class GymSystemController {
       }
       else  // Use system from deserialized xml
       {
-         dao = (SystemDao) list.get(0);
+         dao = (SystemDao) list.get(1);
       }
    }
    
@@ -503,5 +503,54 @@ public class GymSystemController {
    public Set<WorkoutRoutine> getWorkoutRoutines(){      
       return dao.getWorkoutRoutines();
    }
+   /*** Fitness Classes ***/
+   public Response addGymClass(FitnessClass fc){
+	      
+	      Response response = new Response();
+	      response.info = "Failed to add Gym Class.";
+	      
+	      if(dao.addFitnessClass(fc)){
+	         response.successful = true;
+	         response.info = "Gym Class added successfully!";
+	         storeData();
+	      }
+	      
+	      return response;
+	      
+   }
+   public Response removeGymClass(FitnessClass fc){
+	      
+	      Response response = new Response();
+	      response.info = "Failed to remove Gym Class.";
+	      
+	      if(dao.removeFitnessClass(fc)){
+	         response.successful = true;
+	         response.info = "Gym Class removed successfully!";
+	         storeData();
+	      }
+	      
+	      return response;
+	      
+	}
+   public FitnessClass searchGymClasses(String name)
+   {
+      return dao.searchFitnessClasses(name);
+   }
+   public Set<FitnessClass> getGymClasses(){      
+	    return dao.getGymClasses();
+   }
+   public Response updateFitnessClass(FitnessClass old, FitnessClass update)
+   {
+      Response response = new Response();
+      response.info = "Failed to update Fitness Class.";
+      if(update != null && dao.updateFitnessClass(old, update.getName(), update.getInstructor(), update.getClassSchedule(), update.getClassSize(), update.getAttendees())){
+         response.successful = true;
+         response.info = "Fitness Class information updated successfully!";
+         storeData();
+      }
+      
+      return response; 
+   }
+   
    
 }

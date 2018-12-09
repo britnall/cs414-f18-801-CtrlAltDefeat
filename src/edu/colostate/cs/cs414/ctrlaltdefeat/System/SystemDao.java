@@ -1,11 +1,13 @@
 package edu.colostate.cs.cs414.ctrlaltdefeat.System;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Equipment;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Exercise;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.FitnessClass;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.WorkoutRoutine;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Customer;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Employee;
@@ -14,6 +16,7 @@ import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Trainer;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.User;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.MembershipStatus;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.PersonalInformation;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Schedule;
 
 /**
  * Contains sets of all users and information in the Gym Management System
@@ -28,6 +31,7 @@ public class SystemDao {
    Set<Equipment> equipmentInventory;
    Set<Exercise> exercises;
    Set<WorkoutRoutine> workouts;
+   Set<FitnessClass> fitnessClasses;
    
    private static final SystemDao instance = new SystemDao();
 
@@ -38,6 +42,7 @@ public class SystemDao {
       equipmentInventory = new HashSet<Equipment>(); 
       exercises = new HashSet<Exercise>(); 
       workouts = new HashSet<WorkoutRoutine>();
+      fitnessClasses = new HashSet<FitnessClass>();
    }
    
    /**
@@ -395,5 +400,73 @@ public class SystemDao {
          }
       }
       return null;
+   }
+   /***Fitness Classes**/
+   public boolean addFitnessClass(FitnessClass fitnessClass)
+   {
+      try {
+         this.fitnessClasses.add(fitnessClass);     
+      }
+      catch(Exception e) {
+         return false;
+      }
+      return true;
+   }
+   public boolean updateFitnessClass(FitnessClass fc, String name, Trainer t, Schedule s, Integer max, ArrayList<Customer> attendees){
+      try {
+    	  FitnessClass update = this.getFitnessClass(fc);
+         if(update != null)
+         {
+            update.setName(name);
+            update.setInstructor(t);
+            update.setClassSchedule(s);
+            for(Customer a: attendees) {
+            	if(!update.getAttendees().contains(a)) {
+            		update.addAttendee(a);
+            	}
+            }
+            return true;
+         }
+         else {
+            return false;
+         }
+            
+      }
+      catch(Exception e) {
+         return false;
+      }
+   }
+   public boolean removeFitnessClass(FitnessClass fitnessClass)
+   {
+      try {
+         this.fitnessClasses.remove(fitnessClass);     
+      }
+      catch(Exception e) {
+         return false;
+      }
+      return true;
+   }
+   public FitnessClass getFitnessClass(FitnessClass fc){
+      for(FitnessClass c: this.fitnessClasses)
+      {
+         if(c.equals(fc))
+         {
+            return c;
+         }
+      }
+      return null;
+   }
+   public FitnessClass searchFitnessClasses(String name)
+   {
+      for(FitnessClass fc: this.fitnessClasses)
+      {
+         if(fc.getName().toLowerCase().equals(name.toLowerCase())) {
+            return fc;
+         }
+      }
+      return null;
+   }
+   public Set<FitnessClass> getGymClasses() {
+	   return this.fitnessClasses;
    }
 }
