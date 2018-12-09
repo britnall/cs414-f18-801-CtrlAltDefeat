@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Equipment;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.Exercise;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.FitnessClass;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.WorkoutRoutine;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Customer;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Manager;
@@ -12,6 +13,7 @@ import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Trainer;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.User;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Address;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.PersonalInformation;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Schedule;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.TimeOfDay;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Weekday;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.WorkTime;
@@ -235,6 +237,18 @@ public class GymSystemCreator {
       }
       
       return wr;
+   }
+   public FitnessClass createFitnessClass(String name, Trainer t, Schedule s, String m)
+   {
+	  FitnessClass fc = null;
+	  
+	  Integer max = Integer.parseInt(m);
+      if(name != null && !name.equals("") && t != null && s != null && max > 0)
+      {
+    	  fc = new FitnessClass(name, t, s, max);
+      }
+      
+      return fc;
    }
    
 }
