@@ -7,11 +7,17 @@ package edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo;
  */
 public class Address {
 
-   private String street;     
-   private String state;      
-   private String city;       
-   private String zipCode;
+   private String street;  // street of residence   
+   private String state;   // state of residence   
+   private String city;    // city of residence   
+   private String zipCode; // zipcode of residence
    
+   /**
+    * @param street - street of residence  
+    * @param state -  state of residence  
+    * @param city - city of residence  
+    * @param zipCode - zipcode of residence  
+    */
    public Address(String street, String state, String city, String zipCode) {
       this.street = street;
       this.state = state;
@@ -19,27 +25,62 @@ public class Address {
       this.zipCode = zipCode;
    }
    
+   /**
+    * @return street of residence
+    */
    public String getStreet() {
       return street;
    }
+   
+   /**
+    * Set street of residence
+    * @param street - street of residence
+    */
    public void setStreet(String street) {
       this.street = street;
    }
+   
+   /**
+    * @return state of residence
+    */
    public String getState() {
       return state;
    }
+   
+   /**
+    * Set state of residence
+    * @param state - state of residence
+    */
    public void setState(String state) {
       this.state = state;
    }
+   
+   /**
+    * @return city of residence
+    */
    public String getCity() {
       return city;
    }
+   
+   /**
+    * Set city of residence
+    * @param city - city of residence
+    */
    public void setCity(String city) {
       this.city = city;
    }
+   
+   /**
+    * @return zipcode of residence
+    */
    public String getZipCode() {
       return zipCode;
    }
+   
+   /**
+    * Set the zipcode
+    * @param zipCode - zipcode of residence
+    */
    public void setZipCode(String zipCode) {
       this.zipCode = zipCode;
    }

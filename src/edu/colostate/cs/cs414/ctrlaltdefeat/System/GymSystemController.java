@@ -27,12 +27,12 @@ public class GymSystemController {
 
    private static final GymSystemController instance = new GymSystemController();
    
-   SystemDao dao;
-   List list;
+   SystemDao dao;    // system data access object
+   List list;        // list used to store data for XStream
    
    /**
-    * Sets up Gym Management System with a default user 
-    * or use gym system from deserialization 
+    * Sets up Gym Management System with default users 
+    * or use gym system dao from deserialization 
     */
    private GymSystemController(){
       
@@ -45,10 +45,14 @@ public class GymSystemController {
       {
          dao = SystemDao.getInstance();
          
-         // Add default user
-         User ui = new User("user", "password");
-         Manager default_m = new Manager(ui, null);
+         // Add default users
+         User default_manager = new User("manager", "password");
+         Manager default_m = new Manager(default_manager, null);
          dao.addManager(default_m);
+         
+         User default_trainer = new User("trainer", "password");
+         Trainer default_t = new Trainer(default_trainer, null);
+         dao.addTrainer(default_t);
          
          list.add(dao);
       }
@@ -338,6 +342,12 @@ public class GymSystemController {
       return response;  
    }
    
+   /**
+    * Update manager personal information and user information
+    * @param old - old manager to update
+    * @param update - manager to update information with
+    * @return Indicates whether manager was updated
+    */
    public Response updateManager(Manager old, Manager update)
    {
       Response response = new Response();
@@ -353,6 +363,12 @@ public class GymSystemController {
       return response; 
    }
    
+   /**
+    * Update trainer personal information and user information
+    * @param old - old trainer to update
+    * @param update - trainer to update information with
+    * @return Indicates whether trainer was updated
+    */
    public Response updateTrainer(Trainer old, Trainer update)
    {
       Response response = new Response();
@@ -368,6 +384,12 @@ public class GymSystemController {
       return response; 
    }
    
+   /**
+    * Update customer personal information and membership status information
+    * @param old - old customer to update
+    * @param update - customer to update information with
+    * @return Indicates whether customer was updated
+    */
    public Response updateCustomer(Customer old, Customer update)
    {
       Response response = new Response();
@@ -384,6 +406,12 @@ public class GymSystemController {
       return response; 
    }
    
+   /**
+    * Update equipment information
+    * @param old - old equipment to update
+    * @param update - equipment to update information with
+    * @return Indicates whether equipment was updated
+    */
    public Response updateEquipment(Equipment old, Equipment update)
    {
       Response response = new Response();
@@ -399,6 +427,12 @@ public class GymSystemController {
       return response; 
    }
    
+   /**
+    * Add a exercise to a workout routine
+    * @param exercise - exercise to add
+    * @param workoutRoutine - workout routine to add exercise too
+    * @return Indicates whether exercise was added to workout routine
+    */
    public Response addExerciseToWorkout(Exercise exercise, WorkoutRoutine workoutRoutine){
       
       Response response = new Response();
@@ -423,6 +457,12 @@ public class GymSystemController {
       return response;
    }
    
+   /**
+    * Assign a workout routine to a customer
+    * @param customer - customer to assign workout to
+    * @param workoutRoutine - workout routine to assign to customer
+    * @return Indicates whether workout was assigned to customer
+    */
    public Response assignWorkoutRoutine(Customer customer, WorkoutRoutine workoutRoutine){
       
       Response response = new Response();
@@ -436,6 +476,12 @@ public class GymSystemController {
       return response;
    }
    
+   /**
+    * Unassign a workout routine from a customer
+    * @param customer - customer to unassign workout from
+    * @param workoutRoutine - workout routine to unassign from customer
+    * @return Indicates whether workout was unassigned from customer
+    */
    public Response unassignWorkoutRoutine(Customer customer, String workoutRoutineName){
       
       Response response = new Response();
@@ -455,51 +501,96 @@ public class GymSystemController {
       return response;    
    }
    
+   /**
+    * Search for an employee in the system
+    * @param firstName - first name to search by
+    * @param lastName - last name to search by
+    * @return found employee or null if not found
+    */
    public Employee searchUser(String firstName, String lastName)
    {
       return dao.searchUser(firstName, lastName);
    }
    
+   /**
+    * Search for a customer in the system
+    * @param firstName - first name to search by
+    * @param lastName - last name to search by
+    * @return found customer or null if not found
+    */   
    public Customer searchCustomer(String firstName, String lastName)
    {
       return dao.searchCustomer(firstName, lastName);
    }
    
+   /**
+    * Search for equipment in the system
+    * @param name - name of equipment to search by
+    * @return found equipment or null if not found
+    */ 
    public Equipment searchEquipment(String name)
    {
       return dao.searchEquipment(name);
    }
    
+   /**
+    * Search for an exercise in the system
+    * @param name - name of exercise to search by
+    * @return found employee or null if not found
+    */  
    public Exercise searchExercise(String name)
    {
       return dao.searchExercise(name);
    }
    
+   /**
+    * Search for a workout routine in the system
+    * @param name - name of workout routine to search by
+    * @return found workout routine or null if not found
+    */  
    public WorkoutRoutine searchWorkoutRoutine(String name)
    {
       return dao.searchWorkoutRoutine(name);
    }
 
+   /**
+    * @return a list of managers in the system
+    */
    public Set<Manager> getManagers(){ 
       return dao.getManagers();
    }
    
+   /**
+    * @return a list of trainers in the system
+    */
    public Set<Trainer> getTrainers(){     
       return dao.getTrainers();
    }
    
+   /**
+    * @return a list of customers in the system
+    */
    public Set<Customer> getCustomers(){
       return dao.getCustomers();    
    }
    
+   /**
+    * @return a list of equipment in the system
+    */
    public Set<Equipment> getEquipment(){      
       return dao.getEquipmentInventory();
    }
    
+   /**
+    * @return a list of exercises in the system
+    */
    public Set<Exercise> getExercises(){      
       return dao.getExercises();
    }
    
+   /**
+    * @return a list of workout routines in the system
+    */
    public Set<WorkoutRoutine> getWorkoutRoutines(){      
       return dao.getWorkoutRoutines();
    }
