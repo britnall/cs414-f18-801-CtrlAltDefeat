@@ -368,7 +368,7 @@ public class GymSystemController {
       
       return response;  
    }
-   
+
    /**
     * Update manager personal information and user information
     * @param old - old manager to update
@@ -389,7 +389,7 @@ public class GymSystemController {
       
       return response; 
    }
-   
+
    /**
     * Update trainer personal information and user information
     * @param old - old trainer to update
@@ -410,7 +410,7 @@ public class GymSystemController {
       
       return response; 
    }
-   
+
    /**
     * Update customer personal information and membership status information
     * @param old - old customer to update
@@ -432,12 +432,12 @@ public class GymSystemController {
       
       return response; 
    }
-   
+
    /**
-    * Update equipment information
-    * @param old - old equipment to update
-    * @param update - equipment to update information with
-    * @return Indicates whether equipment was updated
+    * Updates the existing equipment on the system
+    * @param old - the existing the equipment on the system
+    * @param update - the customer with the updated information
+    * @return indicates whether the equipment was successfully updated
     */
    public Response updateEquipment(Equipment old, Equipment update)
    {
@@ -453,7 +453,7 @@ public class GymSystemController {
       
       return response; 
    }
-   
+
    /**
     * Add a exercise to a workout routine
     * @param exercise - exercise to add
@@ -483,7 +483,7 @@ public class GymSystemController {
       
       return response;
    }
-   
+  
    /**
     * Assign a workout routine to a customer
     * @param customer - customer to assign workout to
@@ -527,6 +527,12 @@ public class GymSystemController {
 
       return response;    
    }
+   /**
+    * Searches for a specific user on the system
+    * @param firstName - first name of the user to search for
+    * @param lastName - last name of the user to search for 
+    * @return the searched for user
+    */
    
    /**
     * Search for an employee in the system
@@ -538,7 +544,7 @@ public class GymSystemController {
    {
       return dao.searchUser(firstName, lastName);
    }
-   
+
    /**
     * Search for a customer in the system
     * @param firstName - first name to search by
@@ -549,7 +555,7 @@ public class GymSystemController {
    {
       return dao.searchCustomer(firstName, lastName);
    }
-   
+
    /**
     * Search for equipment in the system
     * @param name - name of equipment to search by
@@ -559,7 +565,7 @@ public class GymSystemController {
    {
       return dao.searchEquipment(name);
    }
-   
+
    /**
     * Search for an exercise in the system
     * @param name - name of exercise to search by
@@ -623,21 +629,21 @@ public class GymSystemController {
    public Set<Customer> getCustomers(){
       return dao.getCustomers();    
    }
-   
+
    /**
     * @return a list of equipment in the system
     */
    public Set<Equipment> getEquipment(){      
       return dao.getEquipmentInventory();
    }
-   
+  
    /**
     * @return a list of exercises in the system
     */
    public Set<Exercise> getExercises(){      
       return dao.getExercises();
    }
-   
+
    /**
     * @return a list of workout routines in the system
     */
@@ -645,7 +651,11 @@ public class GymSystemController {
       return dao.getWorkoutRoutines();
    }
    
-   
+   /**
+    * Adds a gym class to the system
+    * @param fc - the fitness class to add to the system
+    * @return response - indicates whether or not the gym class was added to the system
+    */
    public Response addGymClass(FitnessClass fc){
 	      
 	      Response response = new Response();
@@ -660,7 +670,12 @@ public class GymSystemController {
 	      return response;
 	      
    }
-   
+
+   /**
+    * Removes a specified gym class from the system's list of gym classes
+    * @param fc - the fitness class to remove
+    * @return Indicates whether the gym class was successfully removed
+    */
    public Response removeGymClass(FitnessClass fc){
 	      
 	      Response response = new Response();
@@ -675,16 +690,31 @@ public class GymSystemController {
 	      return response;
 	      
 	}
-   
+
+   /**
+    * Searches for an existing gym class in the list of gym classes on the system
+    * @param name
+    * @return the gym class 
+    */
    public FitnessClass searchGymClasses(String name)
    {
       return dao.searchFitnessClasses(name);
    }
-   
+
+   /**
+    * Returns a list of all Gym class on the system
+    * @return list of Gym classes 
+    */
    public Set<FitnessClass> getGymClasses(){      
 	    return dao.getGymClasses();
    }
-   
+  
+   /**
+    * Update fitness class information
+    * @param old - old fitness class to update
+    * @param update - fitness class to update information with
+    * @return Indicates whether fitness class was updated
+    */
    public Response updateFitnessClass(FitnessClass old, FitnessClass update)
    {
       Response response = new Response();

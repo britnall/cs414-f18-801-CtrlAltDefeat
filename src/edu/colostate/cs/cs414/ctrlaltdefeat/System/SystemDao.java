@@ -50,7 +50,7 @@ public class SystemDao {
    public static SystemDao getInstance(){
       return instance;
    }
-   
+
    /**
     * Add a manager to the system
     * @param manager - manager to add
@@ -66,7 +66,7 @@ public class SystemDao {
          return false;
       }
    }
-   
+
    /**
     * Update a manager in the system
     * @param manager - manager to update
@@ -95,7 +95,7 @@ public class SystemDao {
          return false;
       }  
    }
-   
+
    /**
     * Delete a manager from the system
     * @param manager - manager to remove
@@ -154,7 +154,7 @@ public class SystemDao {
          return false;
       }  
    }
-   
+
    /**
     * Delete a trainer from the system
     * @param trainer - trainer to remove
@@ -184,7 +184,7 @@ public class SystemDao {
          return false;
       }
    }
-   
+
    /**
     * Update a customer in the system
     * @param customer - customer to update
@@ -216,7 +216,7 @@ public class SystemDao {
          return false;
       }     
    }
-   
+
    /**
     * Delete a customer from the system
     * @param customer - customer to remove
@@ -272,7 +272,7 @@ public class SystemDao {
          return false;
       }
    }
-   
+
    /**
     * Delete a equipment in the system
     * @param equipment - equipment to remove
@@ -317,7 +317,7 @@ public class SystemDao {
          return false;
       }
    }
-   
+  
    /**
     * Add workout routine to the system
     * @param workout - workout to add to the system
@@ -347,7 +347,7 @@ public class SystemDao {
          return false;
       }
    }
-   
+  
    /**
     * @return a list of managers in the system
     */
@@ -362,7 +362,7 @@ public class SystemDao {
       }
       return managers;
    }
-   
+     
    /**
     * @return a list of trainers in the system
     */
@@ -399,7 +399,7 @@ public class SystemDao {
    {
       return this.exercises;
    }
-   
+
    /**
     * @return a list of workout routines in the system
     */
@@ -407,7 +407,7 @@ public class SystemDao {
    {
       return this.workouts;
    }
-   
+
    /**
     * Search user by first and last name
     * @param firstName - first name to search by
@@ -447,7 +447,7 @@ public class SystemDao {
       
       return null;
    }
-   
+
    /**
     * Search equipment by name
     * @param name - name to search by
@@ -463,7 +463,7 @@ public class SystemDao {
       }
       return null;
    }
-   
+
    /**
     * Search exercise by name
     * @param name - name to search by
@@ -479,7 +479,7 @@ public class SystemDao {
       }
       return null;
    }
-   
+     
    /**
     * Search workout routine by name
     * @param name - name to search by
@@ -495,7 +495,12 @@ public class SystemDao {
       }
       return null;
    }
-   
+
+   /**
+    * Adds a FitnessClass to the system
+    * @param fitnessClass - the Fitness Class to be added
+    * @return boolean indicator of success
+    */
    public boolean addFitnessClass(FitnessClass fitnessClass)
    {
       try {
@@ -506,7 +511,17 @@ public class SystemDao {
       }
       return true;
    }
-   
+
+   /**
+    * Updates a FitnessClass on the system
+    * @param fc - FitnessClass to be updated
+    * @param name - updated name
+    * @param t - updated Trainer
+    * @param s - updated Schedule
+    * @param max - updated max class size
+    * @param attendees - updated list of attendees
+    * @return Boolean indicator of Success
+    */
    public boolean updateFitnessClass(FitnessClass fc, String name, Trainer t, Schedule s, Integer max, ArrayList<Customer> attendees){
       try {
     	  FitnessClass update = this.getFitnessClass(fc);
@@ -531,7 +546,12 @@ public class SystemDao {
          return false;
       }
    }
-   
+
+   /**
+    * Removes a Fitness Class from the system
+    * @param fitnessClass - Fitness Class to be removed
+    * @return boolean indicator of success
+    */
    public boolean removeFitnessClass(FitnessClass fitnessClass)
    {
       try {
@@ -542,7 +562,12 @@ public class SystemDao {
       }
       return true;
    }
-   
+     
+   /**
+    * Gets a specific Fitness Class on the system
+    * @param fc - fitness class to be searched for
+    * @return c - if the class is found or null if not found
+    */
    public FitnessClass getFitnessClass(FitnessClass fc){
       for(FitnessClass c: this.fitnessClasses)
       {
@@ -553,7 +578,12 @@ public class SystemDao {
       }
       return null;
    }
-   
+
+   /**
+    * Searches for a specific Fitness Class by name
+    * @param name - name of the class to be searched
+    * @return fc - if the Fitness Class is found null if not found
+    */
    public FitnessClass searchFitnessClasses(String name)
    {
       for(FitnessClass fc: this.fitnessClasses)
@@ -564,7 +594,11 @@ public class SystemDao {
       }
       return null;
    }
-   
+
+   /**
+    * Gets all the Fitness class on the system
+    * @return list of all Fitness Classes
+    */
    public Set<FitnessClass> getGymClasses() {
 	   return this.fitnessClasses;
    }

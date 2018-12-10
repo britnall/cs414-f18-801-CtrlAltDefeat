@@ -34,7 +34,7 @@ public class GymSystemCreator {
    
    private GymSystemCreator()
    {}
-   
+  
    /**
     * Create a User object
     * @param userName - username used for login
@@ -52,7 +52,15 @@ public class GymSystemCreator {
       }
       return u;      
    }
-   
+  
+   /**
+    * Creates an Address on the system
+    * @param street
+    * @param state
+    * @param city
+    * @param zipCode
+    * @return a - the Address created on the system
+    */
    public Address createAddress(String street, String state, String city, String zipCode)
    {
       Address a = null;
@@ -66,7 +74,17 @@ public class GymSystemCreator {
       }      
       return a;
    }
-   
+  
+   /**
+    * Creates personal information on the system
+    * @param firstName
+    * @param lastName
+    * @param email
+    * @param phone
+    * @param healthInsuranceProvider
+    * @param address
+    * @return pi - the created personal information
+    */
    public PersonalInformation createPI(String firstName, String lastName, String email, String phone,
          String healthInsuranceProvider, Address address) 
    {
@@ -82,7 +100,7 @@ public class GymSystemCreator {
       }      
       return pi;
    }
-   
+  
    /**
     * Create a Manager object
     * @param userInfo - user information for login
@@ -154,7 +172,7 @@ public class GymSystemCreator {
       
       return wt;
    }
-
+  
    /**
     * Create an Exercise object
     * @param name - name of the exercise
@@ -191,7 +209,7 @@ public class GymSystemCreator {
       
       return e;
    }
-   
+
    /**
     * Create Equipment object
     * @param name - name of the equipment
@@ -238,6 +256,15 @@ public class GymSystemCreator {
       
       return wr;
    }
+  
+   /**
+    * Creates a new FitnessClass on the system
+    * @param name - the name of the fitness class
+    * @param t - the Instructor of the class
+    * @param s - the class schedule
+    * @param m - the maximum size of attendees allowed in the class
+    * @return fc - the created FitnessClass
+    */
    public FitnessClass createFitnessClass(String name, Trainer t, Schedule s, String m)
    {
 	  FitnessClass fc = null;
