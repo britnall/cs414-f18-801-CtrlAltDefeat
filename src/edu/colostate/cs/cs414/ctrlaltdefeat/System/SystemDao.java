@@ -59,12 +59,12 @@ public class SystemDao {
    public boolean addManager(Manager manager)
    {
       try {
-         this.employees.add(manager);   
+         boolean val = this.employees.add(manager);   
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
    
    /**
@@ -103,12 +103,12 @@ public class SystemDao {
     */
    public boolean deleteManager(Manager manager){
       try {
-         this.employees.remove(manager);     
+         boolean val = this.employees.remove(manager);  
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
    
    /**
@@ -118,12 +118,12 @@ public class SystemDao {
     */
    public boolean addTrainer(Trainer trainer){
       try {
-         this.employees.add(trainer);     
+         boolean val = this.employees.add(trainer);   
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
    
    /**
@@ -162,12 +162,12 @@ public class SystemDao {
     */  
    public boolean deleteTrainer(Trainer trainer){
       try {
-         this.employees.remove(trainer);     
+         boolean val = this.employees.remove(trainer);  
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
    
    /**
@@ -177,12 +177,12 @@ public class SystemDao {
     */
    public boolean addCustomer(Customer customer){
       try {
-         this.customers.add(customer);     
+         boolean val = this.customers.add(customer);  
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
    
    /**
@@ -224,12 +224,12 @@ public class SystemDao {
     */
    public boolean deleteCustomer(Customer customer){
       try {
-         this.customers.remove(customer);     
+         boolean val = this.customers.remove(customer);  
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
    
    /**
@@ -239,13 +239,12 @@ public class SystemDao {
     */
    public boolean addEquipment(Equipment equipment){
       try {
-         this.equipmentInventory.add(equipment);     
+         boolean val = this.equipmentInventory.add(equipment);  
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
-      
    }
    
    /**
@@ -281,12 +280,12 @@ public class SystemDao {
     */
    public boolean deleteEquipment(Equipment equipment){
       try {
-         this.equipmentInventory.remove(equipment);     
+         boolean val = this.equipmentInventory.remove(equipment);   
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
    
    /**
@@ -296,13 +295,12 @@ public class SystemDao {
     */
    public boolean addExercise(Exercise exercise){
       try {
-         this.exercises.add(exercise);     
+         boolean val = this.exercises.add(exercise);  
+         return val;
       }
       catch(Exception e) {
          return false;
-      }
-      return true;
-      
+      }      
    }
    
    /**
@@ -312,12 +310,12 @@ public class SystemDao {
     */
    public boolean deleteExercise(Exercise exercise){
       try {
-         this.exercises.remove(exercise);     
+         boolean val = this.exercises.remove(exercise); 
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
    
    /**
@@ -327,13 +325,12 @@ public class SystemDao {
     */
    public boolean addWorkoutRoutine(WorkoutRoutine workout){
       try {
-         this.workouts.add(workout);     
+         boolean val = this.workouts.add(workout);  
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
-      
    }
    
    /**
@@ -343,12 +340,12 @@ public class SystemDao {
     */
    public boolean deleteWorkoutRoutine(WorkoutRoutine workout){
       try {
-         this.workouts.remove(workout);     
+         boolean val = this.workouts.remove(workout);  
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
    
    /**
@@ -498,7 +495,7 @@ public class SystemDao {
       }
       return null;
    }
-   /***Fitness Classes**/
+   
    public boolean addFitnessClass(FitnessClass fitnessClass)
    {
       try {
@@ -509,6 +506,7 @@ public class SystemDao {
       }
       return true;
    }
+   
    public boolean updateFitnessClass(FitnessClass fc, String name, Trainer t, Schedule s, Integer max, ArrayList<Customer> attendees){
       try {
     	  FitnessClass update = this.getFitnessClass(fc);
@@ -533,6 +531,7 @@ public class SystemDao {
          return false;
       }
    }
+   
    public boolean removeFitnessClass(FitnessClass fitnessClass)
    {
       try {
@@ -543,6 +542,7 @@ public class SystemDao {
       }
       return true;
    }
+   
    public FitnessClass getFitnessClass(FitnessClass fc){
       for(FitnessClass c: this.fitnessClasses)
       {
@@ -553,6 +553,7 @@ public class SystemDao {
       }
       return null;
    }
+   
    public FitnessClass searchFitnessClasses(String name)
    {
       for(FitnessClass fc: this.fitnessClasses)
@@ -563,6 +564,7 @@ public class SystemDao {
       }
       return null;
    }
+   
    public Set<FitnessClass> getGymClasses() {
 	   return this.fitnessClasses;
    }

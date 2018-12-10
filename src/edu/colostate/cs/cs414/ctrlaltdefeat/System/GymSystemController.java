@@ -30,6 +30,7 @@ public class GymSystemController {
    
    SystemDao dao;    // system data access object
    List list;        // list used to store data for XStream
+  
    
    /**
     * Sets up Gym Management System with default users 
@@ -58,7 +59,7 @@ public class GymSystemController {
       }
       else  // Use system from deserialized xml
       {
-         dao = (SystemDao) list.get(1);
+         dao = (SystemDao) list.get(0);
       }
    }
    
@@ -91,7 +92,7 @@ public class GymSystemController {
       User login = new User(username, password);
       
       // Check managers for login information
-      for(Manager m: getManagers())
+      for(Manager m: dao.getManagers())
       {
          if(m.getUserInfo().equals(login))
          {
@@ -101,7 +102,7 @@ public class GymSystemController {
       }
       
       // Check trainers for login information
-      for(Trainer t: getTrainers())
+      for(Trainer t: dao.getTrainers())
       {
          if(t.getUserInfo().equals(login))
          {
@@ -286,7 +287,7 @@ public class GymSystemController {
    }
    
    /**
-    * Remove an equipment from the system
+    * Remove an equipment from the system and all exercises that use it
     * @param equipment - equipment to remove
     * @return Indicates whether equipment was removed
     */
@@ -296,6 +297,13 @@ public class GymSystemController {
       response.info = "Failed to remove equipment.";
       
       if(dao.deleteEquipment(equipment)){
+         for(Exercise e: dao.exercises)
+         {
+            if(e.getEquipment().equals(equipment))
+            {
+               this.removeExercise(e);
+            }
+         }
          response.successful = true;
          response.info = "Equipment removed successfully!";
          storeData();
@@ -306,6 +314,7 @@ public class GymSystemController {
    
    /**
     * Remove an exercise from the system
+    * and from workout routines that contain it
     * @param exercise - exercise to remove
     * @return Indicates whether exercise was removed
     */
@@ -315,6 +324,14 @@ public class GymSystemController {
       response.info = "Failed to remove exercise.";
       
       if(dao.deleteExercise(exercise)){
+         for(WorkoutRoutine w: dao.getWorkoutRoutines())
+         {
+            if(w.getExercises().contains(exercise))
+            {
+               w.removeExercise(exercise);
+            }            
+         }
+         
          response.successful = true;
          response.info = "Exercise removed successfully!";
          storeData();
@@ -325,6 +342,7 @@ public class GymSystemController {
    
    /**
     * Remove a workout from the system
+    * and unassign from customers
     * @param workout - workout to remove
     * @return Indicates whether workout was removed
     */
@@ -334,6 +352,15 @@ public class GymSystemController {
       response.info = "Failed to remove workout routine.";
       
       if(dao.deleteWorkoutRoutine(workout)){
+         
+         for(Customer c: dao.getCustomers())
+         {
+            if(c.getWorkoutRoutines().contains(workout))
+            {
+               c.removeRoutine(workout);
+            }
+         }
+         
          response.successful = true;
          response.info = "Workout Routine removed successfully!";
          storeData();
@@ -554,17 +581,40 @@ public class GymSystemController {
    }
 
    /**
-    * @return a list of managers in the system
+    * @return a list of managers in the system except the default manager user
     */
-   public Set<Manager> getManagers(){ 
-      return dao.getManagers();
+   public Set<Manager> getManagers(){
+      Set<Manager> managers = dao.getManagers();
+      
+      User default_manager = new User("manager", "password");
+      
+      for(Manager m: managers)
+      {
+         if(m.getUserInfo().equals(default_manager))
+         {
+            managers.remove(m);
+         }
+      }
+      return managers;
    }
    
    /**
-    * @return a list of trainers in the system
+    * @return a list of trainers in the system except the default trainer user
     */
-   public Set<Trainer> getTrainers(){     
-      return dao.getTrainers();
+   public Set<Trainer> getTrainers(){    
+      Set<Trainer> trainers = dao.getTrainers();
+      
+      User default_trainer = new User("trainer", "password");
+      
+      for(Trainer t: trainers)
+      {
+         if(t.getUserInfo().equals(default_trainer))
+         {
+            trainers.remove(t);
+         }
+      }
+       
+      return trainers;
    }
    
    /**
@@ -594,7 +644,8 @@ public class GymSystemController {
    public Set<WorkoutRoutine> getWorkoutRoutines(){      
       return dao.getWorkoutRoutines();
    }
-   /*** Fitness Classes ***/
+   
+   
    public Response addGymClass(FitnessClass fc){
 	      
 	      Response response = new Response();
@@ -609,6 +660,7 @@ public class GymSystemController {
 	      return response;
 	      
    }
+   
    public Response removeGymClass(FitnessClass fc){
 	      
 	      Response response = new Response();
@@ -623,13 +675,16 @@ public class GymSystemController {
 	      return response;
 	      
 	}
+   
    public FitnessClass searchGymClasses(String name)
    {
       return dao.searchFitnessClasses(name);
    }
+   
    public Set<FitnessClass> getGymClasses(){      
 	    return dao.getGymClasses();
    }
+   
    public Response updateFitnessClass(FitnessClass old, FitnessClass update)
    {
       Response response = new Response();
@@ -642,6 +697,4 @@ public class GymSystemController {
       
       return response; 
    }
-   
-   
 }
