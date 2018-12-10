@@ -14,6 +14,7 @@ import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Employee;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Manager;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.Trainer;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.User;
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserType;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.MembershipStatus;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.PersonalInformation;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Schedule;
@@ -24,9 +25,7 @@ import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Schedule;
  * This object is serialized to XML using XStream
  */
 public class SystemDao {
-   
-   Set<Manager> managers;
-   Set<Trainer> trainers;
+   Set<Employee> employees;
    Set<Customer> customers;
    Set<Equipment> equipmentInventory;
    Set<Exercise> exercises;
@@ -36,8 +35,7 @@ public class SystemDao {
    private static final SystemDao instance = new SystemDao();
 
    private SystemDao(){
-      managers = new HashSet<Manager>();
-      trainers = new HashSet<Trainer>();
+      employees = new HashSet<Employee>();
       customers = new HashSet<Customer>();
       equipmentInventory = new HashSet<Equipment>(); 
       exercises = new HashSet<Exercise>(); 
@@ -52,33 +50,35 @@ public class SystemDao {
    public static SystemDao getInstance(){
       return instance;
    }
+
    /**
-    * Adds a manager to the managers list on the system
-    * @param manager - the manager to be added to the managers list
-    * @return boolean indicating the success or failure of adding the manager to the system
+    * Add a manager to the system
+    * @param manager - manager to add
+    * @return true if manager was added
     */
-   
    public boolean addManager(Manager manager)
    {
       try {
-         this.managers.add(manager);     
+         boolean val = this.employees.add(manager);   
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
+
    /**
-    * Updates a manager
-    * @param manager - manager to be updated
-    * @param pi - new personal info to update the manger with
-    * @param password - new password for the manager
-    * @return boolean indicating the success of updating the manager
+    * Update a manager in the system
+    * @param manager - manager to update
+    * @param pi - personal information to update
+    * @param password - user password to update
+    * @return true if manager was updated
     */
    public boolean updateManager(Manager manager, PersonalInformation pi, User password)
    {
       try {
-         Manager update = this.getManager(manager);
+         Manager update = (Manager) this.searchUser(manager.getPersonalInfo().getFirstName(), 
+               manager.getPersonalInfo().getLastName()); 
          if(update != null)
          {
             update.updatePersonalInfo(pi);
@@ -95,45 +95,49 @@ public class SystemDao {
          return false;
       }  
    }
+
    /**
-    * Deletes a manager
-    * @param manager - manager to be deleted
-    * @return indicator of success of deleting the manager
+    * Delete a manager from the system
+    * @param manager - manager to remove
+    * @return true if manager was removed
     */
    public boolean deleteManager(Manager manager){
       try {
-         this.managers.remove(manager);     
+         boolean val = this.employees.remove(manager);  
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
+   
    /**
-    * Adds a Trainer to the trainers list
-    * @param trainer - trainer to be added
-    * @return boolean indicator of success of adding the Trainer
+    * Add a trainer to the system
+    * @param trainer - trainer to add
+    * @return true if trainer was added
     */
    public boolean addTrainer(Trainer trainer){
       try {
-         this.trainers.add(trainer);     
+         boolean val = this.employees.add(trainer);   
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
+   
    /**
-    * Updates a Trainer
-    * @param trainer - Trainer to be updated
-    * @param pi - new personal information for the Trainer
-    * @param password - new password for the Trainer
-    * @return boolean indicator of the success of updating the Trainer
+    * Update a trainer in the system
+    * @param trainer - trainer to update
+    * @param pi - personal information to update
+    * @param password - user password to update
+    * @return true if trainer was updated
     */
    public boolean updateTrainer(Trainer trainer, PersonalInformation pi, User password)
    {
       try {
-         Trainer update = this.getTrainer(trainer);
+         Trainer update = (Trainer) this.searchUser(trainer.getPersonalInfo().getFirstName(), 
+               trainer.getPersonalInfo().getLastName());              
          if(update != null)
          {
             update.updatePersonalInfo(pi);
@@ -150,49 +154,51 @@ public class SystemDao {
          return false;
       }  
    }
+
    /**
-    * Deletes a Trainer
-    * @param trainer - Trainer to be deleted
-    * @return boolean indicator of success
-    */
-   
+    * Delete a trainer from the system
+    * @param trainer - trainer to remove
+    * @return true if trainer was removed
+    */  
    public boolean deleteTrainer(Trainer trainer){
       try {
-         this.trainers.remove(trainer);     
+         boolean val = this.employees.remove(trainer);  
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
+   
    /**
-    * Adds a Customer to the Gym's Customers list
-    * @param customer - customer to be added
-    * @return boolean indicator of success
+    * Add a customer to the system
+    * @param customer - customer to add
+    * @return true if customer was added
     */
    public boolean addCustomer(Customer customer){
       try {
-         this.customers.add(customer);     
+         boolean val = this.customers.add(customer);  
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
+
    /**
-    * Updates a Customer
-    * @param customer - Customer to be updated
-    * @param pi - new personal information for the customer
-    * @param status - new status for the customer
-    * @param routines - new routines for the Customer
-    * @return boolean indicator of success
+    * Update a customer in the system
+    * @param customer - customer to update
+    * @param pi - personal information to update
+    * @param status - membership status to update
+    * @param routines - workout routines to update
+    * @return true if customer was updated
     */
-   
    public boolean updateCustomer(Customer customer, PersonalInformation pi, 
          MembershipStatus status, Set<WorkoutRoutine> routines)
    {
       try {
-         Customer update = this.getCustomer(customer);
+         Customer update = this.searchCustomer(customer.getPersonalInfo().getFirstName(), 
+               customer.getPersonalInfo().getLastName());
          if(update != null)
          {
             update.updatePersonalInfo(pi);
@@ -210,46 +216,47 @@ public class SystemDao {
          return false;
       }     
    }
+
    /**
-    * Deletes a Customer from the gym system
-    * @param customer - Customer to be deleted
-    * @return boolean indicator of success
+    * Delete a customer from the system
+    * @param customer - customer to remove
+    * @return True if customer was removed
     */
-   
    public boolean deleteCustomer(Customer customer){
       try {
-         this.customers.remove(customer);     
+         boolean val = this.customers.remove(customer);  
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
+   
    /**
-    * Adds Equipment to the Gym's equipment inventory 
-    * @param equipment - equipment to be added
-    * @return boolean indicator of success
+    * Add equipment to the system
+    * @param equipment - equipment to add
+    * @return True if equipment was added
     */
    public boolean addEquipment(Equipment equipment){
       try {
-         this.equipmentInventory.add(equipment);     
+         boolean val = this.equipmentInventory.add(equipment);  
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
-      
    }
+   
    /**
-    * Updates Equipment on the system
-    * @param equipment - equipment to be updated
-    * @param picture - associated picture for the equipment
-    * @param quantity - quantity of the equipment in the Gym inventory
-    * @return boolean indicator of success
+    * Update equipment in the system
+    * @param equipment - equipment to update
+    * @param picture - picture of equipment to update
+    * @param quantity - quantity to update
+    * @return True if the equipment was updated
     */
    public boolean updateEquipment(Equipment equipment, File picture, int quantity){
       try {
-         Equipment update = this.getEquipment(equipment);
+         Equipment update = this.searchEquipment(equipment.getName());
          if(update != null)
          {
             update.setPicture(picture);
@@ -265,222 +272,167 @@ public class SystemDao {
          return false;
       }
    }
+
    /**
-    * Deletes Equipment from the system
-    * @param equipment - the equipment to be deleted
-    * @return boolean indicator of success
+    * Delete a equipment in the system
+    * @param equipment - equipment to remove
+    * @return True if the equipment was removed
     */
-   
    public boolean deleteEquipment(Equipment equipment){
       try {
-         this.equipmentInventory.remove(equipment);     
+         boolean val = this.equipmentInventory.remove(equipment);   
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
+   
    /**
-    * Adds an exercise to the system
-    * @param exercise - the exercise to be added
-    * @return boolean indicator of success
+    * Add an exercise to the system
+    * @param exercise - exercise to add
+    * @return True if the exercise was added
     */
    public boolean addExercise(Exercise exercise){
       try {
-         this.exercises.add(exercise);     
+         boolean val = this.exercises.add(exercise);  
+         return val;
       }
       catch(Exception e) {
          return false;
-      }
-      return true;
-      
+      }      
    }
-   /**
-    * Deletes the Exercise from the system
-    * @param exercise - exercise to be removed
-    * @return boolean indicator of succcess
-    */
    
+   /**
+    * Delete an exercise from the system
+    * @param exercise - exercise to remove
+    * @return True if the exercise was removed
+    */
    public boolean deleteExercise(Exercise exercise){
       try {
-         this.exercises.remove(exercise);     
+         boolean val = this.exercises.remove(exercise); 
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
+  
    /**
-    * Add WorkoutRoutine to the system
-    * @param workout - WorkoutRoutine to be added
-    * @return boolean indicator of success
+    * Add workout routine to the system
+    * @param workout - workout to add to the system
+    * @return True if the workout routine was added 
     */
    public boolean addWorkoutRoutine(WorkoutRoutine workout){
       try {
-         this.workouts.add(workout);     
+         boolean val = this.workouts.add(workout);  
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
-      
    }
-   /**
-    * Deletes WorkoutRoutine from the system
-    * @param workout - Routine to be deleted
-    * @return boolean indicator of success
-    */
    
+   /**
+    * Delete a workout routine from the system
+    * @param workout - workout to be removed from the system
+    * @return True if the workout routine was removed
+    */
    public boolean deleteWorkoutRoutine(WorkoutRoutine workout){
       try {
-         this.workouts.remove(workout);     
+         boolean val = this.workouts.remove(workout);  
+         return val;
       }
       catch(Exception e) {
          return false;
       }
-      return true;
    }
+  
    /**
-    * Gets a list of all managers on the system
-    * @return list of all managers 
+    * @return a list of managers in the system
     */
    public Set<Manager> getManagers() {
-      return this.managers;
-   }
-   /**
-    * Searches for a specific Manager 
-    * @param manager - Manager to be searched for
-    * @return m- manager to be returned or null if not found
-    */
-   public Manager getManager(Manager manager) {
-      for(Manager m: this.managers)
+      Set<Manager> managers = new HashSet<Manager>();
+      for(Employee e: this.employees)
       {
-         if(m.equals(manager))
+         if(e.getUserType() == UserType.MANAGER)
          {
-            return m;
+            managers.add((Manager)e);
          }
       }
-      return null;
+      return managers;
    }
+     
    /**
-    * Gets list of all Trainers on the system
-    * @return list of all Trainers
+    * @return a list of trainers in the system
     */
-   
    public Set<Trainer> getTrainers(){
-      return this.trainers;
-   }
-   /**
-    * Searches for a specific Trainer
-    * @param trainer - trainer to to be found
-    * @return t - searched for Trainer or null if not found
-    */
-   public Trainer getTrainer(Trainer trainer){
-      for(Trainer t: this.trainers)
+      Set<Trainer> trainers = new HashSet<Trainer>();
+      for(Employee e: this.employees)
       {
-         if(t.equals(trainer))
+         if(e.getUserType() == UserType.TRAINER)
          {
-            return t;
+            trainers.add((Trainer)e);
          }
       }
-      return null;
+      return trainers;
    }
+   
    /**
-    * Gets all customers on the system
-    * @return list of all Customers
+    * @return a list of customers in the system
     */
    public Set<Customer> getCustomers(){
         return this.customers;
    }
-	/**
-	 * Returns a specific Customer
-	 * @param customer - Customer to be searched for
-	 * @return c - searched for Customer or null if not found
-	 */
-   public Customer getCustomer(Customer customer) {
-      for(Customer c: this.customers)
-      {
-         if(c.equals(customer))
-         {
-            return c;
-         }
-      }
-      return null;
-   }
-   /**
-    * Gets all Equipment on the system
-    * @return list of the Gym's equipment
-    */
 
+   /**
+    * @return a list of equipment in the system
+    */
    public Set<Equipment> getEquipmentInventory() {
       return this.equipmentInventory;
    }
-	/**
-	 * Searches for a specific equipment
-	 * @param equipment - equipment to be searched
-	 * @return e - the searched for Equipment or null if not found
-	 */
-   public Equipment getEquipment(Equipment equipment) {
-      for(Equipment e: this.equipmentInventory)
-      {
-         if(e.equals(equipment))
-         {
-            return e;
-         }
-      }
-      return null;
-   }
+   
    /**
-    * Gets all exercise on the system
-    * @return list of all exercises 
+    * @return a list of exercises in the system
     */
    public Set<Exercise> getExercises()
    {
       return this.exercises;
    }
+
    /**
-    * Gets all WorkoutRoutines on the system
-    * @return list of all WorkoutRoutines
+    * @return a list of workout routines in the system
     */
-   
    public Set<WorkoutRoutine> getWorkoutRoutines()
    {
       return this.workouts;
    }
+
    /**
-    * Searches for a specific User by first and last name
-    * @param firstName - first name of the user to be searched for
-    * @param lastName - last name of the user to be searched for
-    * @return m - if the searched for user is a Manager, t - if the searched for user is a Trainer, and null if the user is not found
+    * Search user by first and last name
+    * @param firstName - first name to search by
+    * @param lastName - last name to search by
+    * @return Employee found or null if not found
     */
    public Employee searchUser(String firstName, String lastName)
    {
-      for(Manager m: this.managers)
+      for(Employee e: this.employees)
       {
-         if(!m.getUserInfo().getUserName().equals("user") && 
-               m.getPersonalInfo().getFirstName().toLowerCase().equals(firstName.toLowerCase()) && 
-               m.getPersonalInfo().getLastName().toLowerCase().equals(lastName.toLowerCase()))
+         if(e.getPersonalInfo().getFirstName().toLowerCase().equals(firstName.toLowerCase()) && 
+            e.getPersonalInfo().getLastName().toLowerCase().equals(lastName.toLowerCase()))
          {
-            return m;
-         }
-      }
-      
-      for(Trainer t: this.trainers)
-      {
-         if(t.getPersonalInfo().getFirstName().toLowerCase().equals(firstName.toLowerCase()) && 
-               t.getPersonalInfo().getLastName().toLowerCase().equals(lastName.toLowerCase()))
-         {
-            return t;
+            return e;
          }
       }
       
       return null;
    }
+   
    /**
-    * Customer to be searched
-    * @param firstName - first name of the Customer to be searched
-    * @param lastName - last name of the Customer to be searched
-    * @return c - the found Customer or null if not found
+    * Search customer by first and last name
+    * @param firstName - first name to search by
+    * @param lastName - last name to search by
+    * @return Customer found or null if not found
     */
    public Customer searchCustomer(String firstName, String lastName)
    {
@@ -495,12 +447,12 @@ public class SystemDao {
       
       return null;
    }
+
    /**
-    * Searches for a specific Equipment in the Gym's Inventory
-    * @param name - name of the Equipment to be searched for
-    * @return e - Equipment if the equipment is found, null if not found
+    * Search equipment by name
+    * @param name - name to search by
+    * @return Equipment found or null if not found
     */
-   
    public Equipment searchEquipment(String name)
    {
       for(Equipment e: this.equipmentInventory)
@@ -511,12 +463,12 @@ public class SystemDao {
       }
       return null;
    }
+
    /**
-    * Searches for a specific exercise
-    * @param name - name of exercise to be searched for
-    * @return e - the found exercise, or null if not found
+    * Search exercise by name
+    * @param name - name to search by
+    * @return Exercise found or null if not found
     */
-   
    public Exercise searchExercise(String name)
    {
       for(Exercise e: this.exercises)
@@ -527,12 +479,12 @@ public class SystemDao {
       }
       return null;
    }
+     
    /**
-    * Searches for a specific WorkoutRoutine
-    * @param name - name of the routine to be searched for
-    * @return w - the found WorkoutRoutine or null if not found
+    * Search workout routine by name
+    * @param name - name to search by
+    * @return Workout routine found or null if not found
     */
-   
    public WorkoutRoutine searchWorkoutRoutine(String name)
    {
       for(WorkoutRoutine w: this.workouts)
@@ -543,7 +495,7 @@ public class SystemDao {
       }
       return null;
    }
-   /***Fitness Classes**/
+
    /**
     * Adds a FitnessClass to the system
     * @param fitnessClass - the Fitness Class to be added
@@ -559,6 +511,7 @@ public class SystemDao {
       }
       return true;
    }
+
    /**
     * Updates a FitnessClass on the system
     * @param fc - FitnessClass to be updated
@@ -593,6 +546,7 @@ public class SystemDao {
          return false;
       }
    }
+
    /**
     * Removes a Fitness Class from the system
     * @param fitnessClass - Fitness Class to be removed
@@ -608,6 +562,7 @@ public class SystemDao {
       }
       return true;
    }
+     
    /**
     * Gets a specific Fitness Class on the system
     * @param fc - fitness class to be searched for
@@ -623,6 +578,7 @@ public class SystemDao {
       }
       return null;
    }
+
    /**
     * Searches for a specific Fitness Class by name
     * @param name - name of the class to be searched
@@ -638,6 +594,7 @@ public class SystemDao {
       }
       return null;
    }
+
    /**
     * Gets all the Fitness class on the system
     * @return list of all Fitness Classes

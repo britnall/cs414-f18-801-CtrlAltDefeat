@@ -9,7 +9,7 @@ public class User {
    private String password;   // password used for login
    
    /**
-    * @param userName
+    * @param userName - username used for login
     * @param password - password used for login
     */
    public User(String userName, String password) {

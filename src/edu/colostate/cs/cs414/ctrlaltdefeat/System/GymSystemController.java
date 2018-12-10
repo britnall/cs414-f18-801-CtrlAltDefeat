@@ -28,12 +28,13 @@ public class GymSystemController {
 
    private static final GymSystemController instance = new GymSystemController();
    
-   SystemDao dao;
-   List list;
+   SystemDao dao;    // system data access object
+   List list;        // list used to store data for XStream
+  
    
    /**
-    * Sets up Gym Management System with a default user 
-    * or use gym system from deserialization 
+    * Sets up Gym Management System with default users 
+    * or use gym system dao from deserialization 
     */
    private GymSystemController(){
       
@@ -45,16 +46,20 @@ public class GymSystemController {
       {
          dao = SystemDao.getInstance();
          
-         // Add default user
-         User ui = new User("user", "password");
-         Manager default_m = new Manager(ui, null);
+         // Add default users
+         User default_manager = new User("manager", "password");
+         Manager default_m = new Manager(default_manager, null);
          dao.addManager(default_m);
+         
+         User default_trainer = new User("trainer", "password");
+         Trainer default_t = new Trainer(default_trainer, null);
+         dao.addTrainer(default_t);
          
          list.add(dao);
       }
       else  // Use system from deserialized xml
       {
-         dao = (SystemDao) list.get(1);
+         dao = (SystemDao) list.get(0);
       }
    }
    
@@ -87,7 +92,7 @@ public class GymSystemController {
       User login = new User(username, password);
       
       // Check managers for login information
-      for(Manager m: getManagers())
+      for(Manager m: dao.getManagers())
       {
          if(m.getUserInfo().equals(login))
          {
@@ -97,7 +102,7 @@ public class GymSystemController {
       }
       
       // Check trainers for login information
-      for(Trainer t: getTrainers())
+      for(Trainer t: dao.getTrainers())
       {
          if(t.getUserInfo().equals(login))
          {
@@ -282,7 +287,7 @@ public class GymSystemController {
    }
    
    /**
-    * Remove an equipment from the system
+    * Remove an equipment from the system and all exercises that use it
     * @param equipment - equipment to remove
     * @return Indicates whether equipment was removed
     */
@@ -292,6 +297,13 @@ public class GymSystemController {
       response.info = "Failed to remove equipment.";
       
       if(dao.deleteEquipment(equipment)){
+         for(Exercise e: dao.exercises)
+         {
+            if(e.getEquipment().equals(equipment))
+            {
+               this.removeExercise(e);
+            }
+         }
          response.successful = true;
          response.info = "Equipment removed successfully!";
          storeData();
@@ -302,6 +314,7 @@ public class GymSystemController {
    
    /**
     * Remove an exercise from the system
+    * and from workout routines that contain it
     * @param exercise - exercise to remove
     * @return Indicates whether exercise was removed
     */
@@ -311,6 +324,14 @@ public class GymSystemController {
       response.info = "Failed to remove exercise.";
       
       if(dao.deleteExercise(exercise)){
+         for(WorkoutRoutine w: dao.getWorkoutRoutines())
+         {
+            if(w.getExercises().contains(exercise))
+            {
+               w.removeExercise(exercise);
+            }            
+         }
+         
          response.successful = true;
          response.info = "Exercise removed successfully!";
          storeData();
@@ -321,6 +342,7 @@ public class GymSystemController {
    
    /**
     * Remove a workout from the system
+    * and unassign from customers
     * @param workout - workout to remove
     * @return Indicates whether workout was removed
     */
@@ -330,6 +352,15 @@ public class GymSystemController {
       response.info = "Failed to remove workout routine.";
       
       if(dao.deleteWorkoutRoutine(workout)){
+         
+         for(Customer c: dao.getCustomers())
+         {
+            if(c.getWorkoutRoutines().contains(workout))
+            {
+               c.removeRoutine(workout);
+            }
+         }
+         
          response.successful = true;
          response.info = "Workout Routine removed successfully!";
          storeData();
@@ -337,11 +368,12 @@ public class GymSystemController {
       
       return response;  
    }
+
    /**
-    * Updates an existing manager on the system
-    * @param old - the existing manager on the system
-    * @param update - manager containing the updated info
-    * @return indicates whether the manager was successfully updated
+    * Update manager personal information and user information
+    * @param old - old manager to update
+    * @param update - manager to update information with
+    * @return Indicates whether manager was updated
     */
    public Response updateManager(Manager old, Manager update)
    {
@@ -357,11 +389,12 @@ public class GymSystemController {
       
       return response; 
    }
+
    /**
-    * Updates an exiting trainer on the system
-    * @param old - the existing trainer on the system
-    * @param update - the trainer containing the updated information
-    * @return indicates whether the trainer was successfully updated
+    * Update trainer personal information and user information
+    * @param old - old trainer to update
+    * @param update - trainer to update information with
+    * @return Indicates whether trainer was updated
     */
    public Response updateTrainer(Trainer old, Trainer update)
    {
@@ -377,13 +410,13 @@ public class GymSystemController {
       
       return response; 
    }
+
    /**
-    * Updates an existing customer on the system
-    * @param old - the existing customer on the system
-    * @param update - the customer with the updated information
-    * @return indicates whether the customer was successfully updated
+    * Update customer personal information and membership status information
+    * @param old - old customer to update
+    * @param update - customer to update information with
+    * @return Indicates whether customer was updated
     */
-   
    public Response updateCustomer(Customer old, Customer update)
    {
       Response response = new Response();
@@ -399,6 +432,7 @@ public class GymSystemController {
       
       return response; 
    }
+
    /**
     * Updates the existing equipment on the system
     * @param old - the existing the equipment on the system
@@ -419,11 +453,12 @@ public class GymSystemController {
       
       return response; 
    }
+
    /**
-    * Adds an exercise to a routine
-    * @param exercise - exercise to be added to a WorkoutRoutine
-    * @param workoutRoutine - WorkoutRoutine to add the exercise to
-    * @return indicates whether the exercise was successfully added to the WorkoutRoutine
+    * Add a exercise to a workout routine
+    * @param exercise - exercise to add
+    * @param workoutRoutine - workout routine to add exercise too
+    * @return Indicates whether exercise was added to workout routine
     */
    public Response addExerciseToWorkout(Exercise exercise, WorkoutRoutine workoutRoutine){
       
@@ -448,13 +483,13 @@ public class GymSystemController {
       
       return response;
    }
+  
    /**
-    * Assigns a WorkoutRoutine to a customer
-    * @param customer - customer to assign routine to
-    * @param workoutRoutine - WorkoutRoutine to be assigned
-    * @return Indicates whether the routine was susccessfully assigned to the customer
+    * Assign a workout routine to a customer
+    * @param customer - customer to assign workout to
+    * @param workoutRoutine - workout routine to assign to customer
+    * @return Indicates whether workout was assigned to customer
     */
-   
    public Response assignWorkoutRoutine(Customer customer, WorkoutRoutine workoutRoutine){
       
       Response response = new Response();
@@ -467,13 +502,13 @@ public class GymSystemController {
 
       return response;
    }
-   /**
-    * Unassigns a WorkoutRoutine from a customer
-    * @param customer - customer to un-assign the workout routine from
-    * @param workoutRoutineName - routine name to remove from the customer's list of routines
-    * @return indicates whether the routine was successfully removed from teh customer
-    */
    
+   /**
+    * Unassign a workout routine from a customer
+    * @param customer - customer to unassign workout from
+    * @param workoutRoutine - workout routine to unassign from customer
+    * @return Indicates whether workout was unassigned from customer
+    */
    public Response unassignWorkoutRoutine(Customer customer, String workoutRoutineName){
       
       Response response = new Response();
@@ -499,91 +534,118 @@ public class GymSystemController {
     * @return the searched for user
     */
    
+   /**
+    * Search for an employee in the system
+    * @param firstName - first name to search by
+    * @param lastName - last name to search by
+    * @return found employee or null if not found
+    */
    public Employee searchUser(String firstName, String lastName)
    {
       return dao.searchUser(firstName, lastName);
    }
+
    /**
-    * Searches for a specific customer by first & last name
-    * @param firstName - first name of customer to search for
-    * @param lastName - last name of customer to search for
-    * @return searched for customer
-    */
-   
+    * Search for a customer in the system
+    * @param firstName - first name to search by
+    * @param lastName - last name to search by
+    * @return found customer or null if not found
+    */   
    public Customer searchCustomer(String firstName, String lastName)
    {
       return dao.searchCustomer(firstName, lastName);
    }
+
    /**
-    * Searches for a specific equipment
-    * @param name - name of the specific equipment to search for
-    * @return searched equipment
-    */
-   
+    * Search for equipment in the system
+    * @param name - name of equipment to search by
+    * @return found equipment or null if not found
+    */ 
    public Equipment searchEquipment(String name)
    {
       return dao.searchEquipment(name);
    }
+
    /**
-    * Searches for a specific exercise
-    * @param name - name of the exercise to search for
-    * @return searched exercise
-    */
-   
+    * Search for an exercise in the system
+    * @param name - name of exercise to search by
+    * @return found employee or null if not found
+    */  
    public Exercise searchExercise(String name)
    {
       return dao.searchExercise(name);
    }
+   
    /**
-    * Searches for a specific workout-routine   
-    * @param name - name of the WorkoutRoutine to find
-    * @return searched WorkoutRoutine
-    */
+    * Search for a workout routine in the system
+    * @param name - name of workout routine to search by
+    * @return found workout routine or null if not found
+    */  
    public WorkoutRoutine searchWorkoutRoutine(String name)
    {
       return dao.searchWorkoutRoutine(name);
    }
-   /**
-    * Gets all the managers on the system
-    * @return list of all managers on the system
-    */
 
-   public Set<Manager> getManagers(){ 
-      return dao.getManagers();
-   }
    /**
-    * Gets all the Trainers on the system
-    * @return list of all trainers on the system
+    * @return a list of managers in the system except the default manager user
     */
-   
-   public Set<Trainer> getTrainers(){     
-      return dao.getTrainers();
+   public Set<Manager> getManagers(){
+      Set<Manager> managers = dao.getManagers();
+      
+      User default_manager = new User("manager", "password");
+      
+      for(Manager m: managers)
+      {
+         if(m.getUserInfo().equals(default_manager))
+         {
+            managers.remove(m);
+         }
+      }
+      return managers;
    }
+   
    /**
-    * Gets all the customers on the system
-    * @return list of all customers
+    * @return a list of trainers in the system except the default trainer user
+    */
+   public Set<Trainer> getTrainers(){    
+      Set<Trainer> trainers = dao.getTrainers();
+      
+      User default_trainer = new User("trainer", "password");
+      
+      for(Trainer t: trainers)
+      {
+         if(t.getUserInfo().equals(default_trainer))
+         {
+            trainers.remove(t);
+         }
+      }
+       
+      return trainers;
+   }
+   
+   /**
+    * @return a list of customers in the system
     */
    public Set<Customer> getCustomers(){
       return dao.getCustomers();    
    }
+
    /**
-    * Gets a list of all the equipment on the system
-    * @return list of equipment on the system
+    * @return a list of equipment in the system
     */
    public Set<Equipment> getEquipment(){      
       return dao.getEquipmentInventory();
    }
+  
    /**
-    * Gets all the exercises on the system
-    * @return list of all the exercises on the system
+    * @return a list of exercises in the system
     */
-   
    public Set<Exercise> getExercises(){      
       return dao.getExercises();
    }
+
    /**
-    * Gets all the workout routines on the system
-    * @return list of all WorkoutRoutines on the system
+    * @return a list of workout routines in the system
     */
    public Set<WorkoutRoutine> getWorkoutRoutines(){      
       return dao.getWorkoutRoutines();
@@ -608,6 +670,7 @@ public class GymSystemController {
 	      return response;
 	      
    }
+
    /**
     * Removes a specified gym class from the system's list of gym classes
     * @param fc - the fitness class to remove
@@ -627,6 +690,7 @@ public class GymSystemController {
 	      return response;
 	      
 	}
+
    /**
     * Searches for an existing gym class in the list of gym classes on the system
     * @param name
@@ -636,6 +700,7 @@ public class GymSystemController {
    {
       return dao.searchFitnessClasses(name);
    }
+
    /**
     * Returns a list of all Gym class on the system
     * @return list of Gym classes 
@@ -643,10 +708,12 @@ public class GymSystemController {
    public Set<FitnessClass> getGymClasses(){      
 	    return dao.getGymClasses();
    }
+  
    /**
-    * Updates an existing fitness class
-    * @param old - Fitness class the exists in the system
-    * @return update - Fitness class that contains the updated information for the existing fitness class
+    * Update fitness class information
+    * @param old - old fitness class to update
+    * @param update - fitness class to update information with
+    * @return Indicates whether fitness class was updated
     */
    public Response updateFitnessClass(FitnessClass old, FitnessClass update)
    {

@@ -34,11 +34,12 @@ public class GymSystemCreator {
    
    private GymSystemCreator()
    {}
+  
    /**
-    * Creates a new user on the system
-    * @param userName - user name for the user on the system
-    * @param password - password for the user on the system
-    * @return u - the created user on the system
+    * Create a User object
+    * @param userName - username used for login
+    * @param password - password used for login
+    * @return User object or null if invalid
     */
    public User createUser(String userName, String password) {
       User u = null;
@@ -51,6 +52,7 @@ public class GymSystemCreator {
       }
       return u;      
    }
+  
    /**
     * Creates an Address on the system
     * @param street
@@ -59,7 +61,6 @@ public class GymSystemCreator {
     * @param zipCode
     * @return a - the Address created on the system
     */
-   
    public Address createAddress(String street, String state, String city, String zipCode)
    {
       Address a = null;
@@ -73,6 +74,7 @@ public class GymSystemCreator {
       }      
       return a;
    }
+  
    /**
     * Creates personal information on the system
     * @param firstName
@@ -83,7 +85,6 @@ public class GymSystemCreator {
     * @param address
     * @return pi - the created personal information
     */
-   
    public PersonalInformation createPI(String firstName, String lastName, String email, String phone,
          String healthInsuranceProvider, Address address) 
    {
@@ -99,13 +100,13 @@ public class GymSystemCreator {
       }      
       return pi;
    }
+  
    /**
-    * Creates a Manager on the system
-    * @param userInfo - the login information for the user
-    * @param personalInfo - the personal information for the user
-    * @return m - the created manager
+    * Create a Manager object
+    * @param userInfo - user information for login
+    * @param personalInfo - personal information
+    * @return Manager object or null if invalid
     */
-   
    public Manager createManager(User userInfo, PersonalInformation personalInfo)
    {
       Manager m = null;
@@ -116,13 +117,13 @@ public class GymSystemCreator {
       
       return m;
    }
-   /**
-    * Creates a Trainer on the system
-    * @param userInfo - the login information for the user
-    * @param personalInfo - the personal information for the user
-    * @return t - the created Trainer
-    */
 
+   /**
+    * Create a Trainer object
+    * @param userInfo - user information for login
+    * @param personalInfo - personal information
+    * @return Trainer object or null if invalid
+    */
    public Trainer createTrainer(User userInfo, PersonalInformation personalInfo)
    {
       Trainer t = null;
@@ -133,10 +134,11 @@ public class GymSystemCreator {
       
       return t;
    }
-   /** 
-    * Creates a customer on the system
-    * @param personalInfo - the personal information for the user
-    * @return
+
+   /**
+    * Create a Customer object
+    * @param personalInfo - personal information
+    * @return Customer object or null if invalid
     */
    public Customer createCustomer(PersonalInformation personalInfo)
    {
@@ -148,12 +150,13 @@ public class GymSystemCreator {
       
       return c;
    }
+
    /**
-    * Creates a WorkTime on the system
-    * @param start - the enumerated time of day indicating the start time
-    * @param end - the enumerated time of day indicating the end time
-    * @param day - the weekd day the worktime is on
-    * @return
+    * Create a WorkTime object
+    * @param start - time work shift start
+    * @param end - time work shift ends
+    * @param day - day of work shift
+    * @return WorkTime object or null if invalid
     */
    public WorkTime createWorkTime(TimeOfDay start, TimeOfDay end, Weekday day)
    {
@@ -169,15 +172,15 @@ public class GymSystemCreator {
       
       return wt;
    }
+  
    /**
-    * Creates an Exercise on the system
+    * Create an Exercise object
     * @param name - name of the exercise
-    * @param numOfRepsStr - number of repetitions
-    * @param numOfSetsStr - number of sets
-    * @param equipmentStr - the equipment to be used
-    * @return e - the created exercise
+    * @param numOfReps - number of repetitions
+    * @param numOfSets - number of sets
+    * @param equipment - equipment used for exercise (null can be passed in)
+    * @return Exercise object or null if invalid
     */
-   
    public Exercise createExercise(String name, String numOfRepsStr, String numOfSetsStr, String equipmentStr)
    {
       Exercise e = null;
@@ -206,14 +209,14 @@ public class GymSystemCreator {
       
       return e;
    }
+
    /**
-    * Creates a new Equipment object on the system
-    * @param name - Equipment name
-    * @param picturePath - path to the corresponding picture
-    * @param quantityStr - quantity of the equipment in the gym's inventory
-    * @return e - the created Equipment
+    * Create Equipment object
+    * @param name - name of the equipment
+    * @param picture - file of equipment picture 
+    * @param quantity - quantity of equipment
+    * @return Equipment object or null if invalid
     */
-   
    public Equipment createEquipment(String name, String picturePath, String quantityStr)
    {
       Equipment e = null;
@@ -231,13 +234,13 @@ public class GymSystemCreator {
       
       return e;
    }
-   /**
-    * Creates a new WorkoutRoutine
-    * @param name - name of the routine
-    * @param exercise - the exercise to be used in the routine
-    * @return wr - the created WorkoutRoutine
-    */
    
+   /**
+    * Create a WorkoutRoutine object
+    * @param name - name of workout routine
+    * @param exercises - list of exercises
+    * @return WorkoutRoutine object or null if invalid
+    */
    public WorkoutRoutine createWorkoutRoutine(String name, Exercise exercise)
    {
       WorkoutRoutine wr = null;
@@ -253,6 +256,7 @@ public class GymSystemCreator {
       
       return wr;
    }
+  
    /**
     * Creates a new FitnessClass on the system
     * @param name - the name of the fitness class

@@ -6,13 +6,21 @@ package edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo;
  */
 public class PersonalInformation {
    
-   private String firstName;
-   private String lastName;
-   private String email;
-   private String phone;
-   private String healthInsuranceProvider;
-   private Address address;
+   private String firstName;              // first name of person
+   private String lastName;               // last name of person
+   private String email;                  // email of person
+   private String phone;                  // phone number of person
+   private String healthInsuranceProvider; // health insurance of person
+   private Address address;               // address of person
    
+   /**
+    * @param firstName - first name of person
+    * @param lastName - last name of person
+    * @param email - email of person
+    * @param phone - phone number of person
+    * @param healthInsuranceProvider - health insurance of person
+    * @param address - address of person
+    */
    public PersonalInformation(String firstName, String lastName, String email, String phone,
          String healthInsuranceProvider, Address address) {
       this.firstName = firstName;
@@ -23,33 +31,76 @@ public class PersonalInformation {
       this.address = address;
    }
 
+   /**
+    * @return first name of person
+    */
    public String getFirstName() {
       return firstName;
    }
+   
+   /**
+    * @return last name of person
+    */
    public String getLastName() {
       return lastName;
    }
+   
+   /**
+    * @return email of person
+    */
    public String getEmail() {
       return email;
    }
+   
+   /**
+    * Set email of person
+    * @param email - email of person
+    */
    public void setEmail(String email) {
       this.email = email;
    }
+   
+   /**
+    * @return phone number of person
+    */
    public String getPhone() {
       return phone;
    }
+   
+   /**
+    * Set phone number of person
+    * @param phone - phone number of person
+    */
    public void setPhone(String phone) {
       this.phone = phone;
    }
+   
+   /**
+    * @return health insurance of person
+    */
    public String getHealthInsuranceProvider() {
       return healthInsuranceProvider;
    }
+   
+   /**
+    * Set health insurance of person
+    * @param healthInsuranceProvider - health insurance of person
+    */
    public void setHealthInsuranceProvider(String healthInsuranceProvider) {
       this.healthInsuranceProvider = healthInsuranceProvider;
    }
+   
+   /**
+    * @return address of person
+    */
    public Address getAddress() {
 	      return this.address;
 	}
+   
+   /**
+    * Set address of person
+    * @param address - address of person
+    */
    public void setAddress(Address address) {
       this.address = address;
    }
