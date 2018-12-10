@@ -7,45 +7,81 @@ import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity.WorkoutRoutine;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.MembershipStatus;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.PersonalInformation;
 
+/**
+ * Customer for the Gym System
+ *
+ */
 public class Customer {
 
-   private PersonalInformation personalInfo;
-   private MembershipStatus status;
-   private Set<WorkoutRoutine> routines;
+   private PersonalInformation personalInfo;    // Personal information
+   private MembershipStatus status;             // Status of Membership
+   private Set<WorkoutRoutine> routines;        // Assigned workout routine
    
+   /**
+    * Creates customer with an active membership and no workout routines
+    * @param personalInfo - Personal information
+    */
    public Customer(PersonalInformation personalInfo) {
       this.personalInfo = personalInfo;
       this.status = MembershipStatus.ACTIVE;
       routines = new HashSet<WorkoutRoutine>();
    }
    
+   /**
+    * @return Personal information
+    */
    public PersonalInformation getPersonalInfo() {
       return personalInfo;
    }
+   
+   /**
+    * @param personalInfo - Personal information
+    */
    public void updatePersonalInfo(PersonalInformation personalInfo) {
       this.personalInfo.setAddress(personalInfo.getAddress());
       this.personalInfo.setEmail(personalInfo.getEmail());
       this.personalInfo.setHealthInsuranceProvider(personalInfo.getHealthInsuranceProvider());
       this.personalInfo.setPhone(personalInfo.getPhone());
    }
+   
+   /**
+    * @return Status of Membership
+    */
    public MembershipStatus getStatus() {
       return status;
    }
+   
+   /**
+    * @param status - Status of Membership
+    */
    public void setStatus(MembershipStatus status) {
       this.status = status;
    }
   
+   /**
+    * @param r - workout routine to assign
+    */
    public void addRoutine(WorkoutRoutine r) {
 	   this.routines.add(r);
    }
+   
+   /**
+    * @param r - remove assigned workout routine
+    */
    public void removeRoutine(WorkoutRoutine r) {
 	   this.routines.remove(r);
    }
    
+   /**
+    * @param wr - list of workout routines
+    */
    public void setWorkoutRoutines(Set<WorkoutRoutine> wr) {
       this.routines = wr;
    }
    
+   /**
+    * @return list of workout routines
+    */
    public Set<WorkoutRoutine> getWorkoutRoutines() {
       return this.routines;
    }

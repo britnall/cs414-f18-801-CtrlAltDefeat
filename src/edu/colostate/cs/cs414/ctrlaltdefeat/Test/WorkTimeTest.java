@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.TimeOfDay;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Weekday;
 import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.WorkTime;
 
@@ -13,7 +14,7 @@ class WorkTimeTest {
 
    @BeforeEach
    void setUp() throws Exception {
-      testWorkTime = new WorkTime("09:00", "06:00", Weekday.MONDAY);
+      testWorkTime = new WorkTime(TimeOfDay._10AM, TimeOfDay._8PM, Weekday.MONDAY);
    }
 
    @AfterEach
@@ -23,24 +24,24 @@ class WorkTimeTest {
 
    @Test
    void testGetStartTime() {
-      Assertions.assertEquals("09:00", testWorkTime.getStartTime());
+      Assertions.assertEquals(TimeOfDay._10AM, testWorkTime.getStartTime());
    }
 
    @Test
    void testSetStartTime() {
-      testWorkTime.setStartTime("08:00");
-      Assertions.assertEquals("08:00", testWorkTime.getStartTime());
+      testWorkTime.setStartTime(TimeOfDay._8AM);
+      Assertions.assertEquals(TimeOfDay._8AM, testWorkTime.getStartTime());
    }
 
    @Test
    void testGetEndTime() {
-      Assertions.assertEquals("06:00", testWorkTime.getEndTime());
+      Assertions.assertEquals(TimeOfDay._8PM, testWorkTime.getEndTime());
    }
 
    @Test
    void testSetEndTime() {
-      testWorkTime.setEndTime("05:00");
-      Assertions.assertEquals("05:00", testWorkTime.getEndTime());
+      testWorkTime.setEndTime(TimeOfDay._5PM);
+      Assertions.assertEquals(TimeOfDay._5PM, testWorkTime.getEndTime());
    }
 
    @Test
@@ -56,19 +57,19 @@ class WorkTimeTest {
    
    @Test
    void testHashCode() {
-      WorkTime copy = new WorkTime("09:00", "06:00", Weekday.MONDAY);
+      WorkTime copy = new WorkTime(TimeOfDay._10AM, TimeOfDay._8PM, Weekday.MONDAY);
       Assertions.assertEquals(testWorkTime.hashCode(), copy.hashCode());
    }
 
    @Test
    void testEquals() {
-      WorkTime copy = new WorkTime("09:00", "06:00", Weekday.MONDAY);
+      WorkTime copy = new WorkTime(TimeOfDay._10AM, TimeOfDay._8PM, Weekday.MONDAY);
       Assertions.assertTrue(testWorkTime.equals(copy));
    }
 
    @Test
    void testNotEquals() {
-      WorkTime comp = new WorkTime("09:00", "06:00", Weekday.TUESDAY);
+      WorkTime comp = new WorkTime(TimeOfDay._10AM, TimeOfDay._8PM, Weekday.TUESDAY);
       Assertions.assertFalse(testWorkTime.equals(comp));
    }
 

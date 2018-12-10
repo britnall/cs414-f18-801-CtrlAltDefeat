@@ -1,36 +1,61 @@
 package edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity;
 
 import java.io.File;
-import java.sql.Blob;
 
+/**
+ * Equipment in the Gym
+ *
+ */
 public class Equipment {
    
-   private String name;
-   private File picture;
-   private Integer quantity;
+   private String name;       // name of the equipment
+   private File picture;      // file of equipment picture
+   private Integer quantity;  // quantity of equipment
    
+   /**
+    * Create Equipment
+    * @param name - name of the equipment
+    * @param picture - file of equipment picture 
+    * @param quantity - quantity of equipment
+    */
    public Equipment(String name, File picture, Integer quantity) {
       this.name = name;
       this.picture = picture;
       this.quantity = quantity;
    }
    
+   
+   /**
+    * @return name of the equipment
+    */
    public String getName() {
       return name;
    }
    
+   /**
+    * @return file of equipment picture
+    */
    public File getPicture() {
       return picture;
    }
    
+   /**
+    * @param picture - file of equipment picture
+    */
    public void setPicture(File picture) {
       this.picture = picture;
    }
    
+   /**
+    * @return quantity of equipment
+    */
    public Integer getQuantity() {
       return quantity;
    }
    
+   /**
+    * @param quantity - quantity of equipment
+    */
    public void setQuantity(Integer quantity) {
       this.quantity = quantity;
    }
@@ -42,6 +67,7 @@ public class Equipment {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -58,10 +84,5 @@ public class Equipment {
 			return false;
 		return true;
 	}
-
-   public void setImageBlob(Blob imageBlob) {
-      // TODO Auto-generated method stub
-      
-   }
    
 }

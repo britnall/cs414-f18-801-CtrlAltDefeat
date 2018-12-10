@@ -1,12 +1,22 @@
 package edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Entity;
 
+/**
+ * Exercise for a Workout Routine
+ *
+ */
 public class Exercise {
 
-   private String name;
-   private Integer numOfSets;
-   private Integer numOfReps;
-   private Equipment equipment;
+   private String name;          // name of the exercise
+   private Integer numOfSets;    // number of sets
+   private Integer numOfReps;    // number of repetitions
+   private Equipment equipment;  // equipment used for exercise
 
+   /**
+    * @param name - name of the exercise
+    * @param numOfReps - number of repetitions
+    * @param numOfSets - number of sets
+    * @param equipment - equipment used for exercise (null can be passed in)
+    */
    public Exercise(String name, Integer numOfReps, Integer numOfSets, Equipment equipment) {
       this.name = name;
       this.numOfReps = numOfReps;
@@ -14,28 +24,51 @@ public class Exercise {
       this.equipment = equipment;
    }
    
+   /**
+    * @return name of the exercise
+    */
    public String getName() {
       return name;
    }
+   
+   /**
+    * @return number of sets
+    */
    public Integer getNumOfSets() {
       return numOfSets;
    }
+   
+   /**
+    * @param numOfSets - number of sets
+    */
    public void setNumOfSets(Integer numOfSets) {
       this.numOfSets = numOfSets;
    }
    
+   /**
+    * @return number of repetitions
+    */
    public Integer getNumOfReps() {
       return numOfReps;
    }
 
+   /**
+    * @param numOfReps - number of repetitions
+    */
    public void setNumOfReps(Integer numOfReps) {
       this.numOfReps = numOfReps;
    }
 
+   /**
+    * @return equipment used for exercise
+    */
    public Equipment getEquipment() {
       return equipment;
    }
 
+   /**
+    * @param equipment - equipment used for exercise
+    */
    public void setEquipment(Equipment equipment) {
       this.equipment = equipment;
    }
@@ -91,7 +124,7 @@ public class Exercise {
       {
          equipmentName = equipment.getName();
       }
-      return "Exercise [name=" + name + ", numOfSets=" + numOfSets + ", numOfReps=" + numOfReps + ", equipment="
+      return "Exercise [Name=" + name + ", Sets=" + numOfSets + ", Reps=" + numOfReps + ", Equipment="
             + equipmentName + "]";
    }
 }

@@ -1,0 +1,4 @@
+
+*.class
+.DS_Store
+src/int@0.xml

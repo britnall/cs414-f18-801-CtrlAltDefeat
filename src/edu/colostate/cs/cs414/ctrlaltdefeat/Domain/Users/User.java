@@ -1,22 +1,39 @@
 package edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users;
 
+/**
+ * User login information of an Employee
+ *
+ */
 public class User {
-   private String userName;
-   private String password;
+   private String userName;   // username used for login
+   private String password;   // password used for login
    
+   /**
+    * @param userName - username used for login
+    * @param password - password used for login
+    */
    public User(String userName, String password) {
       this.userName = userName;
       this.password = password;
    }
    
+   /**
+    * @return username used for login
+    */
    public String getUserName() {
       return userName;
    }
 
+   /**
+    * @return password used for login
+    */
    public String getPassword() {
       return password;
    }
 
+   /**
+    * @param password - password used for login
+    */
    public void setPassword(String password) {
       this.password = password;
    }

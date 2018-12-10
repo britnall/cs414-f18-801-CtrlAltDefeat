@@ -1,43 +1,70 @@
 package edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo;
 
+/**
+ * Start and End Time for a Day of the Week
+ *
+ */
 public class WorkTime {
-	private String startTime;
-	private String endTime;
-	private Weekday dayOfWeek;
+	private TimeOfDay startTime;    // time work shift start
+	private TimeOfDay endTime;      // time work shift ends
+	private Weekday dayOfWeek;      // day of work shift
 	
-	public WorkTime(String start, String end, Weekday day) {
+	/**
+	 * @param start - time work shift start
+	 * @param end - time work shift ends
+	 * @param day - day of work shift
+	 */
+	public WorkTime(TimeOfDay start, TimeOfDay end, Weekday day) {
 		this.startTime = start;
 		this.endTime = end;
 		this.dayOfWeek = day;
 	}
 
-   public String getStartTime() {
+   /**
+    * @return time work shift start
+    */
+   public TimeOfDay getStartTime() {
       return startTime;
    }
 
-   public void setStartTime(String startTime) {
+   /**
+    * @param startTime - time work shift start
+    */
+   public void setStartTime(TimeOfDay startTime) {
       this.startTime = startTime;
    }
 
-   public String getEndTime() {
+   /**
+    * @return time work shift ends
+    */
+   public TimeOfDay getEndTime() {
       return endTime;
    }
 
-   public void setEndTime(String endTime) {
+   /**
+    * @param endTime - time work shift ends
+    */
+   public void setEndTime(TimeOfDay endTime) {
       this.endTime = endTime;
    }
 
+   /**
+    * @return day of work shift
+    */
    public Weekday getDayOfWeek() {
       return dayOfWeek;
    }
 
+   /**
+    * @param dayOfWeek - day of work shift
+    */
    public void setDayOfWeek(Weekday dayOfWeek) {
       this.dayOfWeek = dayOfWeek;
    }
 
    @Override
    public String toString() {
-      return "[startTime=" + startTime + ", endTime=" + endTime + ", dayOfWeek=" + dayOfWeek + "]";
+      return "[start=" + startTime + ", end=" + endTime + ", day=" + dayOfWeek + "]";
    }
 
    @Override
