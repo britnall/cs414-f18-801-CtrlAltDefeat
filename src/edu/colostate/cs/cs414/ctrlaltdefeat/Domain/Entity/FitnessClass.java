@@ -6,7 +6,11 @@ import edu.colostate.cs.cs414.ctrlaltdefeat.Domain.Users.UserInfo.Schedule;
 import java.util.ArrayList;
 
 
-
+/**
+ * 
+ *Fitness Class in the Gym
+ *
+ */
 public class FitnessClass {
 	private Trainer instructor;
 	private String name;
@@ -15,6 +19,12 @@ public class FitnessClass {
 	private Schedule classSchedule;
 	private Integer maxClassSize;
 	
+	/**
+    * @param name - name of the class
+    * @param Trainer - instructor for the class
+    * @param Schedule - class schedule
+    * @param max - max number of customers for the class
+    */
 	
 	public FitnessClass(String name, Trainer i, Schedule s, Integer max) {
 		this.name = name;
@@ -23,18 +33,34 @@ public class FitnessClass {
 		classSchedule = s;
 		maxClassSize = max;
 	}
+	/**
+    * @return name - name of the class
+    */
 	public String getName() {
 		return this.name;
 	}
+	/**
+    * @param name - name of the class
+    */
 	public void setName(String name) {
 		this.name = name;
 	}
+	/**
+    * @return instructor - return assigned trainer for the class
+    */
 	public Trainer getInstructor() {
 		return this.instructor;
 	}
+	/**
+    * @param t - instructor for the class
+    */
 	public void setInstructor(Trainer t) {
 		this.instructor = t;
 	}
+	/**
+    * @param c - customer who attends the class
+    * @return success - boolean indicating whether the customer was successfully added to the list of attendees for the class
+    */
 	public boolean addAttendee(Customer c) {
 		boolean success = false;
 		if(this.getClassSize() < this.maxClassSize) {
@@ -43,6 +69,10 @@ public class FitnessClass {
 		}
 		return success;
 	}
+	/**
+    * @param c - customer who attends the class
+    * @return success - boolean indicating whether the customer was successfully removed from the list of attendees for the class
+    */
 	public boolean removeAttendee(Customer c) {
 		boolean success = false;
 		this.attendees.remove(c);
@@ -51,21 +81,44 @@ public class FitnessClass {
 		}
 		return success;
 	}
+	/**
+	 * @return attendees - list of customers who are attending the gym class
+	 */
 	public ArrayList<Customer> getAttendees() {
 		return this.attendees;
 	}
+	/**
+	 * 
+	 * @param s - class schedule
+	 */
 	public void setClassSchedule(Schedule s) {
 		this.classSchedule = s;
 	}
+	/**
+	 * 
+	 * @return classSchedule - the schedule for the class
+	 */
 	public Schedule getClassSchedule() {
 		return this.classSchedule;
 	}
+	/**
+	 * 
+	 * @return size of the list of customer who attend the class
+	 */
 	public Integer getClassSize() {
 		return this.attendees.size();
 	}
+	/**
+	 * 
+	 * @return maxClassSize - maximum number of attendees for the class
+	 */
 	public Integer getMaxClassSize() {
 		return this.maxClassSize;
 	}
+	/**
+	 * 
+	 * @param size - the maximum size the class can be
+	 */
 	public void setMaxClassSize(Integer size) {
 		this.maxClassSize = size;
 	}
@@ -126,11 +179,6 @@ public class FitnessClass {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
-	}
-	
-	
-	
-	
-	
+	}	
 	
 }
