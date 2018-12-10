@@ -527,12 +527,6 @@ public class GymSystemController {
 
       return response;    
    }
-   /**
-    * Searches for a specific user on the system
-    * @param firstName - first name of the user to search for
-    * @param lastName - last name of the user to search for 
-    * @return the searched for user
-    */
    
    /**
     * Search for an employee in the system
